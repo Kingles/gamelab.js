@@ -1,22 +1,27 @@
 (function() {
-  var _this = this,
+  var requireJS,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  requireJS(["../shared/core.js"], function(sharedGlabCore) {
-    var glabClient;
-    return glabClient = (function(_super) {
+  requireJS = requirejs;
 
-      __extends(glabClient, _super);
+  $(document).ready(function() {
+    var _this = this;
+    return requireJS(["../shared/core.js"], function(sharedGlabCore) {
+      var glabClient;
+      return glabClient = (function(_super) {
 
-      function glabClient() {
-        console.log('sdfsd client core start');
-        glabClient.__super__.constructor.apply(this, arguments);
-      }
+        __extends(glabClient, _super);
 
-      return glabClient;
+        function glabClient() {
+          console.log('sdfsd client core start');
+          glabClient.__super__.constructor.apply(this, arguments);
+        }
 
-    })(sharedGlabCore);
+        return glabClient;
+
+      })(sharedGlabCore);
+    });
   });
 
 }).call(this);

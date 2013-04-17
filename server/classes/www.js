@@ -16,8 +16,10 @@
         path = require('path');
         debug = this.settings.debug;
         this.server = http.createServer(function(request, response) {
-          var file, mime, parts;
+          var extension, file, mime, parts, urlArgs;
           request.url = request.url.replace('..', '');
+          urlArgs = request.url.split('?');
+          if (urlArgs.length > 1) request.url = urlArgs[0];
           if (request.url === '/') {
             file = _this.settings.docRoot + '/client/index.html';
           } else if (request.url.substr(0, 8) === '/shared/') {
@@ -27,30 +29,13 @@
             file = _this.settings.docRoot + '/shared/' + parts.join('/');
           } else {
             file = _this.settings.docRoot + '/client/' + request.url;
-            parts = file.split('?');
-            if (parts.length > 1) file = parts[0];
           }
-          switch (path.extname(file)) {
-            case '.js':
-              mime = 'text/javascript';
-              break;
-            case '.css':
-              mime = 'text/css';
-              break;
-            case '.png':
-              mime = 'image/png';
-              break;
-            case '.ico':
-              mime = 'image/vnd.microsoft.icon';
-              break;
-            case '.swf':
-              mime = 'application/x-shockwave-flash';
-              break;
-            case '.coffee':
-              file = '404';
-              break;
-            default:
-              mime = 'text/html';
+          extension = path.extname(file);
+          if (_this.settings.mimes[extension] != null) {
+            mime = _this.settings.mimes[extension];
+          } else {
+            file = '404.htm';
+            mime = _this.settings.mimes['.htm'];
           }
           return fs.exists(file, function(ok) {
             if (ok) {
@@ -64,7 +49,7 @@
                   response.writeHead(200, {
                     'Content-Type': mime
                   });
-                  return response.end(data, 'utf-8');
+                  return response.end(data, _this.settings.encoding);
                 }
               });
             } else {

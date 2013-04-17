@@ -6,26 +6,31 @@ define () =>
 			path = require 'path'
 			debug = @settings.debug
 			@server = http.createServer (request, response) =>
+				# Prevent directory traversal
 				request.url = request.url.replace '..', ''
+				# Remove URL arguments, if there are any
+				urlArgs = request.url.split '?'
+				request.url = urlArgs[0] if urlArgs.length > 1
+				# Index file
 				if request.url == '/'
 					file = @settings.docRoot+'/client/index.html'
+				# Direct shared resources correctly.
 				else if request.url.substr(0, 8) == '/shared/'
 					parts = request.url.split '/'
 					parts.shift()
 					parts.shift()
 					file = @settings.docRoot+'/shared/'+parts.join('/')
+				# Append docRoot/client/ to all other requests
 				else
 					file = @settings.docRoot+'/client/'+request.url
-					parts= file.split '?'
-					file = parts[0] if parts.length > 1
-				switch path.extname(file)
-					when '.js' then mime = 'text/javascript'
-					when '.css' then mime = 'text/css'
-					when '.png' then mime = 'image/png'
-					when '.ico' then mime = 'image/vnd.microsoft.icon'
-					when '.swf' then mime = 'application/x-shockwave-flash'
-					when '.coffee' then file = '404'
-					else mime = 'text/html'
+				# Find extension name and get MIMETYPE from settings
+				extension = path.extname(file)
+				if @settings.mimes[extension]?
+					mime = @settings.mimes[extension]
+				else
+					file = '404.htm'
+					mime = @settings.mimes['.htm']
+				# Check if file exists
 				fs.exists file, (ok) =>
 					if ok
 						console.log '200 OK', file if debug > 3
@@ -36,10 +41,12 @@ define () =>
 								response.end()
 							else
 								response.writeHead 200, { 'Content-Type': mime }
-								response.end data, 'utf-8'
+								response.end data, @settings.encoding
 					else
+						# TODO: look for 404.htm file and read that, if it exists.
 						console.log '404 Not Found', file if debug > 1
 						response.writeHead 404, { 'Content-Type': 'text/html' }
 						response.end '404', 'utf-8'
+		# Start the server
 		init: () =>
 			@server.listen @settings.port

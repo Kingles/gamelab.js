@@ -14,7 +14,17 @@
         this.www = {
           'debug': debug,
           'port': 8080,
-          'docRoot': '../client/'
+          'docRoot': '/home/eru/projects/gamelab.js/',
+          'encoding': 'utf-8',
+          'mimes': {
+            '.js': 'text/javascript',
+            '.css': 'text/css',
+            '.png': 'image/png',
+            '.ico': 'image/vnd.microsoft.icon',
+            '.swf': 'application/x-shockwave-flash',
+            '.html': 'text/html',
+            '.htm': 'text/html'
+          }
         };
         this.sockServer = {
           'port': 8081

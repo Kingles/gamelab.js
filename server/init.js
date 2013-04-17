@@ -18,7 +18,6 @@
       }
   };
   startDaemon = function() {
-    var p, pRunning;
     p = spawn("node", [coreFile]);
     p.on('close', function(code, signal) {
       var processRunning;
@@ -33,15 +32,12 @@
     return pRunning = true;
   };
   stopDaemon = function() {
-      var pRunning;
-      if (p !== false){
-        p.kill();
-      }
-      return pRunning = false;
+      p.kill();
+      pRunning = false;
   };
   restart = function() {
       stopDaemon();
-      return startDaemon();
+      startDaemon();
   };
   if (environmentMode == 'prod') {
     startDaemon();
