@@ -1,3 +1,11 @@
 GameLab	- by Seandon Mooy
 	A game engine, based on NodeJS and ThreeJS, written in Coffee-Script
 	The spirital successor to the "E" engines.
+
+
+TODO:
+	clientside 3rd party module loader and bundler
+		- List of modules to load, with project URIs
+		- modes:
+			dev:	load newest projects in non-minified mode
+			prod:   load specific version in minified and bundled mode

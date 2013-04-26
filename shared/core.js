@@ -2,8 +2,7 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   define(function() {
-    var requireJS, sharedGlabCore;
-    requireJS = require('requirejs');
+    var sharedGlabCore;
     return sharedGlabCore = (function() {
 
       function sharedGlabCore() {
@@ -27,7 +26,7 @@
           fileList.push(modulePath);
         }
         try {
-          return requireJS(fileList, function() {
+          return require(fileList, function() {
             var klass, _i, _len;
             for (_i = 0, _len = arguments.length; _i < _len; _i++) {
               klass = arguments[_i];

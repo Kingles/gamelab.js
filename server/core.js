@@ -5,7 +5,9 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  requireJS = require('requirejs');
+  if (typeof requireJS === "undefined" || requireJS === null) {
+    requireJS = require('requirejs');
+  }
 
   requireJS(["../shared/core.js"], function(sharedGlabCore) {
     var glabServer, server;
@@ -34,7 +36,7 @@
             _this.db.init();
           }
           if (_this.settings.www != null) {
-            _this.www = new _this.modules['www'](_this.settings.www);
+            _this.www = new _this.modules['www'](_this.settings.www, _this.settings.clientSettings);
             _this.www.init();
           }
           if (_this.settings.sockServer != null) {

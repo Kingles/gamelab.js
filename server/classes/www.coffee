@@ -1,6 +1,6 @@
 define () =>
 	return class www
-		constructor: (@settings) ->
+		constructor: (@settings, @clientSettings) ->
 			fs = require 'fs'
 			http = require 'http'
 			path = require 'path'
@@ -41,7 +41,7 @@ define () =>
 								response.end()
 							else
 								response.writeHead 200, { 'Content-Type': mime }
-								response.end data, @settings.encoding
+								response.end @.process(file, data), @settings.encoding
 					else
 						# TODO: look for 404.htm file and read that, if it exists.
 						console.log '404 Not Found', file if debug > 1
@@ -50,3 +50,7 @@ define () =>
 		# Start the server
 		init: () =>
 			@server.listen @settings.port
+		process: (fileName, fileData) =>
+			if fileName.substr(-10) == 'index.html'
+				fileData = String(fileData).replace('{{SETTINGS}}', @clientSettings)
+			return fileData

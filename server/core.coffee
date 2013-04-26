@@ -1,4 +1,4 @@
-requireJS = require 'requirejs'
+requireJS = require 'requirejs' unless requireJS?
 requireJS ["../shared/core.js"], (sharedGlabCore) =>
 	class glabServer extends sharedGlabCore
 		constructor: () ->
@@ -17,7 +17,7 @@ requireJS ["../shared/core.js"], (sharedGlabCore) =>
 					@db = new @modules['db'] @settings.db
 					@db.init()
 				if @settings.www?
-					@www = new @modules['www'] @settings.www
+					@www = new @modules['www'] @settings.www, @settings.clientSettings
 					@www.init()
 				if @settings.sockServer?
 					@sockServer = new @modules['sockServer'] @settings.sockServer

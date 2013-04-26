@@ -6,7 +6,7 @@
 
 # expected global: requireJS
 define () ->
-	requireJS = require 'requirejs'
+	#requireJS = require 'requirejs' unless requireJS?
 	return class sharedGlabCore
 		# System wide globals.
 		constructor: () ->
@@ -23,7 +23,7 @@ define () ->
 			for moduleName, modulePath of moduleList
 				fileList.push modulePath
 			try
-				requireJS fileList, () =>
+				require fileList, () =>
 					for klass in arguments
 						@modules[klass.name] = klass
 					callback()

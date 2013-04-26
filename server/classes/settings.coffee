@@ -25,3 +25,11 @@ define () =>
 			@sockServer = {
 				'port': 8081
 			}
+			@clientSettings = JSON.stringify {
+				'www': {
+					'port': @www.port
+				}
+				'game': {
+					'port': @sockServer.port
+				}
+			}

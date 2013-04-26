@@ -6,10 +6,12 @@
     var www;
     return www = (function() {
 
-      function www(settings) {
+      function www(settings, clientSettings) {
         var debug, fs, http, path,
           _this = this;
         this.settings = settings;
+        this.clientSettings = clientSettings;
+        _this.process = __bind(_this.process, this);
         _this.init = __bind(_this.init, this);
         fs = require('fs');
         http = require('http');
@@ -49,7 +51,7 @@
                   response.writeHead(200, {
                     'Content-Type': mime
                   });
-                  return response.end(data, _this.settings.encoding);
+                  return response.end(_this.process(file, data), _this.settings.encoding);
                 }
               });
             } else {
@@ -65,6 +67,13 @@
 
       www.prototype.init = function() {
         return this.server.listen(this.settings.port);
+      };
+
+      www.prototype.process = function(fileName, fileData) {
+        if (fileName.substr(-10) === 'index.html') {
+          fileData = String(fileData).replace('{{SETTINGS}}', this.clientSettings);
+        }
+        return fileData;
       };
 
       return www;

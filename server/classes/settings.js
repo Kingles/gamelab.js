@@ -29,6 +29,14 @@
         this.sockServer = {
           'port': 8081
         };
+        this.clientSettings = JSON.stringify({
+          'www': {
+            'port': this.www.port
+          },
+          'game': {
+            'port': this.sockServer.port
+          }
+        });
       }
 
       return settings;
