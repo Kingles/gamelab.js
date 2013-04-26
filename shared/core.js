@@ -10,6 +10,7 @@
         this.addRoute = __bind(this.addRoute, this);
         this.loadModules = __bind(this.loadModules, this);
         this.log = __bind(this.log, this);        this.modules = {};
+        this.moduleFilesLoaded = {};
         this.events = {};
       }
 
@@ -23,17 +24,24 @@
         fileList = [];
         for (moduleName in moduleList) {
           modulePath = moduleList[moduleName];
-          fileList.push(modulePath);
+          if (this.moduleFilesLoaded[modulePath] == null) {
+            this.moduleFilesLoaded[modulePath] = true;
+            fileList.push(modulePath);
+          }
         }
         try {
-          return require(fileList, function() {
-            var klass, _i, _len;
-            for (_i = 0, _len = arguments.length; _i < _len; _i++) {
-              klass = arguments[_i];
-              _this.modules[klass.name] = klass;
-            }
+          if (fileList.length > 0) {
+            return require(fileList, function() {
+              var klass, _i, _len;
+              for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+                klass = arguments[_i];
+                _this.modules[klass.name] = klass;
+              }
+              return callback();
+            });
+          } else {
             return callback();
-          });
+          }
         } catch (error) {
           this.log("loadModules error");
           throw error;

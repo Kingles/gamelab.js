@@ -16,7 +16,13 @@
       }
 
       glabClient.prototype.init = function() {
-        return console.log(this.settings);
+        /*
+        			modulesToLoad =
+        				'threejs': '/libs/Three.js'
+        			@.loadModules modulesToLoad, () =>
+        				console.log @modules
+        */
+
       };
 
       return glabClient;

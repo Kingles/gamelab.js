@@ -5,12 +5,11 @@ requireJS ["../shared/core.js"], (sharedGlabCore) =>
 			@db = @www = @sockServer = {}
 			super
 		init: () =>
-			modulesToLoad = {
+			modulesToLoad =
 				'settings': 'classes/settings.js'
 				'www': 'classes/www.js'
 				'db': 'classes/db.js'
 				'sockServer': 'classes/sockServer.js'
-			}
 			@.loadModules modulesToLoad, () =>
 				@settings = new @modules['settings']
 				if @settings.db?

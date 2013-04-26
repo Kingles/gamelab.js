@@ -6,7 +6,7 @@
     return settings = (function() {
 
       function settings() {
-        var debug;
+        var clientSettings, debug;
         debug = 1;
         this.db = {
           'type': 'mongodb'
@@ -29,14 +29,16 @@
         this.sockServer = {
           'port': 8081
         };
-        this.clientSettings = JSON.stringify({
+        clientSettings = {
+          'debug': debug,
           'www': {
             'port': this.www.port
           },
           'game': {
             'port': this.sockServer.port
           }
-        });
+        };
+        this.clientSettings = JSON.stringify(clientSettings);
       }
 
       return settings;

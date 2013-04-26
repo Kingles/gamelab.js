@@ -3,4 +3,9 @@ define ["/shared/core.js"], (sharedGlabCore) ->
 		constructor: (@settings) ->
 			super
 		init: () =>
-			console.log @settings
+			###
+			modulesToLoad =
+				'threejs': '/libs/Three.js'
+			@.loadModules modulesToLoad, () =>
+				console.log @modules
+			###

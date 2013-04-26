@@ -1,31 +1,39 @@
 # shared game lab core
 # by Seandon Mooy
-
 # Keep in mind, -everything here- needs to be interpretable by both Node
 # and EVERY MODERN BROWSER. One does not simply 'add code' to shared core.
-
 # expected global: requireJS
 define () ->
-	#requireJS = require 'requirejs' unless requireJS?
 	return class sharedGlabCore
 		# System wide globals.
 		constructor: () ->
 			@modules = {}
+			@moduleFilesLoaded = {}
 			@events  = {}
 		# Logger functionality
 		log: () =>
 			Function.apply.call console.log, console, arguments
 		# Provided a list of modules, loads and calls back
 		# { Name: filePath }
+		# loadModules({name: path}, callback)
 		loadModules: (moduleList, callback) =>
 			# Load modules and callback when complete
 			fileList = []
 			for moduleName, modulePath of moduleList
-				fileList.push modulePath
+				# Don't load twice.
+				unless @moduleFilesLoaded[modulePath]?
+					@moduleFilesLoaded[modulePath] = true
+					fileList.push modulePath 
 			try
-				require fileList, () =>
-					for klass in arguments
-						@modules[klass.name] = klass
+				# If a module actually needs to be loaded
+				if fileList.length > 0
+					require fileList, () =>
+						for klass in arguments
+							@modules[klass.name] = klass
+						callback()
+				# If not, probably bad coding - TODO: log error quietly that we're double loading.
+				# otherwise, callback anyways.
+				else
 					callback()
 			catch error
 				@.log "loadModules error"
