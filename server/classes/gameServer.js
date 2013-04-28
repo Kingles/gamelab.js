@@ -3,19 +3,20 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   define(function() {
-    var db;
-    return db = (function() {
+    var gameServer;
+    return gameServer = (function() {
 
-      function db(settings) {
+      function gameServer(glabCore, settings) {
+        this.glabCore = glabCore;
         this.settings = settings;
         _this.init = __bind(_this.init, this);
       }
 
-      db.prototype.init = function(callback) {
+      gameServer.prototype.init = function(callback) {
         return callback();
       };
 
-      return db;
+      return gameServer;
 
     })();
   });

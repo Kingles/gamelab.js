@@ -29,6 +29,9 @@
         this.sockServer = {
           'port': 8081
         };
+        this.gameSettings = {
+          'initialScene': 'login'
+        };
         clientSettings = {
           'debug': debug,
           'www': {

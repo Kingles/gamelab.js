@@ -70,6 +70,7 @@ define () ->
 				# Recursivly run routes till the bottom of the stack
 				else if style == '{'
 					try
+						json = route
 						if typeof route == "Object"
 							json = route
 						else
@@ -82,3 +83,6 @@ define () ->
 							@.findRoute route, metadata
 				else
 					@.log 'Unknown route style', style
+			runRoute: (route, metadata) =>
+				return false unless @events[route]?
+				@events[route].callback(metadata)

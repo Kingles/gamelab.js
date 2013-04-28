@@ -21,6 +21,8 @@ define () =>
 					'.htm': 'text/html'
 			@sockServer =
 				'port': 8081
+			@gameSettings =
+				'initialScene': 'login'
 
 			# Export settings to client core
 			# WARNING: Do not expose critical information here!!! This is sent plain-text to the user!

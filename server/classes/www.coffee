@@ -1,6 +1,6 @@
 define () =>
 	return class www
-		constructor: (@settings, @clientSettings) ->
+		constructor: (@sharedGlabCore, @settings, @clientSettings) ->
 			fs = require 'fs'
 			http = require 'http'
 			path = require 'path'
@@ -48,8 +48,9 @@ define () =>
 						response.writeHead 404, { 'Content-Type': 'text/html' }
 						response.end '404', 'utf-8'
 		# Start the server
-		init: () =>
+		init: (callback) =>
 			@server.listen @settings.port
+			callback()
 		process: (fileName, fileData) =>
 			if fileName.substr(-10) == 'index.html'
 				fileData = String(fileData).replace('{{SETTINGS}}', @clientSettings)

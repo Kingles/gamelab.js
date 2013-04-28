@@ -27,22 +27,24 @@
           'settings': 'classes/settings.js',
           'www': 'classes/www.js',
           'db': 'classes/db.js',
-          'sockServer': 'classes/sockServer.js'
+          'sockServer': 'classes/sockServer.js',
+          'gameServer': 'classes/gameServer.js'
         };
         return this.loadModules(modulesToLoad, function() {
           _this.settings = new _this.modules['settings'];
-          if (_this.settings.db != null) {
-            _this.db = new _this.modules['db'](_this.settings.db);
-            _this.db.init();
-          }
-          if (_this.settings.www != null) {
-            _this.www = new _this.modules['www'](_this.settings.www, _this.settings.clientSettings);
-            _this.www.init();
-          }
-          if (_this.settings.sockServer != null) {
-            _this.sockServer = new _this.modules['sockServer'](_this.settings.sockServer);
-            return _this.sockServer.init();
-          }
+          _this.db = new _this.modules['db'](_this.settings.db);
+          return _this.db.init(function() {
+            _this.sockServer = new _this.modules['sockServer'](_this, _this.settings.sockServer);
+            return _this.sockServer.init(function() {
+              _this.www = new _this.modules['www'](_this, _this.settings.www, _this.settings.clientSettings);
+              return _this.www.init(function() {
+                _this.gameServer = new _this.modules['gameServer'](_this, _this.settings.gameSettings);
+                return _this.gameServer.init(function() {
+                  return _this.log('boot complete');
+                });
+              });
+            });
+          });
         });
       };
 

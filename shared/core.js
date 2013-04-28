@@ -72,9 +72,10 @@
       };
 
       sharedGlabCore.prototype.findRoute = function(route, metadata) {
-        var json, parts, style;
+        var json, parts, style,
+          _this = this;
         if (this.events[route] != null) {
-          return this.runRoute(route, metadata);
+          this.runRoute(route, metadata);
         } else {
           style = route.substr(0, 1);
           if (style === '/') {
@@ -82,13 +83,14 @@
             parts.shift();
             if (metadata == null) metadata = {};
             metadata.route = parts;
-            return this.runRoute(parts.shift(), metadata);
+            this.runRoute(parts.shift(), metadata);
           } else if (style === '{') {
             try {
+              json = route;
               if (typeof route === "Object") {
-                return json = route;
+                json = route;
               } else {
-                return json = JSON.parse(route);
+                json = JSON.parse(route);
               }
             } catch (error) {
               this.log('JSON parse error');
@@ -100,9 +102,15 @@
               }
             }
           } else {
-            return this.log('Unknown route style', style);
+            this.log('Unknown route style', style);
           }
         }
+        return {
+          runRoute: function(route, metadata) {
+            if (_this.events[route] == null) return false;
+            return _this.events[route].callback(metadata);
+          }
+        };
       };
 
       return sharedGlabCore;

@@ -6,9 +6,10 @@
     var www;
     return www = (function() {
 
-      function www(settings, clientSettings) {
+      function www(sharedGlabCore, settings, clientSettings) {
         var debug, fs, http, path,
           _this = this;
+        this.sharedGlabCore = sharedGlabCore;
         this.settings = settings;
         this.clientSettings = clientSettings;
         _this.process = __bind(_this.process, this);
@@ -65,8 +66,9 @@
         });
       }
 
-      www.prototype.init = function() {
-        return this.server.listen(this.settings.port);
+      www.prototype.init = function(callback) {
+        this.server.listen(this.settings.port);
+        return callback();
       };
 
       www.prototype.process = function(fileName, fileData) {
