@@ -1,37 +1,32 @@
 (function() {
-  var requireJS,
-    _this = this,
+  var _this = this,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  if (typeof requireJS === "undefined" || requireJS === null) {
-    requireJS = require('requirejs');
-  }
-
-  requireJS(["../shared/core.js"], function(sharedGlabCore) {
+  define(["../shared/core.js"], function(sharedGlabCore) {
     var glabServer;
     return glabServer = (function(_super) {
 
       __extends(glabServer, _super);
 
-      function glabServer() {
-        _this.init = __bind(_this.init, this);        this.db = this.www = this.sockServer = {};
+      function glabServer(settings) {
+        this.settings = settings;
+        _this.init = __bind(_this.init, this);
+        this.db = this.www = this.sockServer = {};
         glabServer.__super__.constructor.apply(this, arguments);
       }
 
-      glabServer.prototype.init = function() {
+      glabServer.prototype.init = function(callback) {
         var modulesToLoad,
           _this = this;
         modulesToLoad = {
-          'settings': 'classes/settings.js',
-          'www': 'classes/www.js',
-          'db': 'classes/db.js',
-          'sockServer': 'classes/sockServer.js',
-          'gameServer': 'classes/gameServer.js'
+          'www': this.settings.root + '/gamelab.js/server/classes/www.js',
+          'db': this.settings.root + '/gamelab.js/server/classes/db.js',
+          'sockServer': this.settings.root + '/gamelab.js/server/classes/sockServer.js',
+          'gameServer': this.settings.root + '/gamelab.js/server/classes/gameServer.js'
         };
         return this.loadModules(modulesToLoad, function() {
-          _this.settings = new _this.modules['settings'];
           _this.db = new _this.modules['db'](_this.settings.db);
           _this.db.init(function() {});
           _this.sockServer = new _this.modules['sockServer'](_this, _this.settings.sockServer);
@@ -39,7 +34,9 @@
           _this.www = new _this.modules['www'](_this, _this.settings.www, _this.settings.clientSettings);
           _this.www.init(function() {});
           _this.gameServer = new _this.modules['gameServer'](_this, _this.settings.gameSettings);
-          return _this.gameServer.init(function() {});
+          return _this.gameServer.init(function() {
+            return callback();
+          });
         });
       };
 
