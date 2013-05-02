@@ -10,8 +10,8 @@
   }
 
   requireJS(["../shared/core.js"], function(sharedGlabCore) {
-    var glabServer, server;
-    glabServer = (function(_super) {
+    var glabServer;
+    return glabServer = (function(_super) {
 
       __extends(glabServer, _super);
 
@@ -33,26 +33,24 @@
         return this.loadModules(modulesToLoad, function() {
           _this.settings = new _this.modules['settings'];
           _this.db = new _this.modules['db'](_this.settings.db);
-          return _this.db.init(function() {
-            _this.sockServer = new _this.modules['sockServer'](_this, _this.settings.sockServer);
-            return _this.sockServer.init(function() {
-              _this.www = new _this.modules['www'](_this, _this.settings.www, _this.settings.clientSettings);
-              return _this.www.init(function() {
-                _this.gameServer = new _this.modules['gameServer'](_this, _this.settings.gameSettings);
-                return _this.gameServer.init(function() {
-                  return _this.log('boot complete');
-                });
-              });
-            });
-          });
+          _this.db.init(function() {});
+          _this.sockServer = new _this.modules['sockServer'](_this, _this.settings.sockServer);
+          _this.sockServer.init(function() {});
+          _this.www = new _this.modules['www'](_this, _this.settings.www, _this.settings.clientSettings);
+          _this.www.init(function() {});
+          _this.gameServer = new _this.modules['gameServer'](_this, _this.settings.gameSettings);
+          return _this.gameServer.init(function() {});
         });
       };
 
       return glabServer;
 
     })(sharedGlabCore);
-    server = new glabServer();
-    return server.init();
+    /*
+    	server = new glabServer()
+    	server.init()
+    */
+
   });
 
 }).call(this);

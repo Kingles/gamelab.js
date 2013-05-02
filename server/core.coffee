@@ -15,14 +15,16 @@ requireJS ["../shared/core.js"], (sharedGlabCore) =>
 				@settings = new @modules['settings']
 				@db = new @modules['db'] @settings.db
 				@db.init () =>
-					@sockServer = new @modules['sockServer'] @, @settings.sockServer
-					@sockServer.init () =>
-						@www = new @modules['www'] @, @settings.www, @settings.clientSettings
-						@www.init () =>
-							@gameServer = new @modules['gameServer'] @, @settings.gameSettings
-							@gameServer.init () =>
-								@.log 'boot complete'
-					
-
+					# DB test
+				@sockServer = new @modules['sockServer'] @, @settings.sockServer
+				@sockServer.init () =>
+				@www = new @modules['www'] @, @settings.www, @settings.clientSettings
+				@www.init () =>
+					# WWW test
+				@gameServer = new @modules['gameServer'] @, @settings.gameSettings
+				@gameServer.init () =>
+					# Gameserver test
+	###
 	server = new glabServer()
 	server.init()
+	###
