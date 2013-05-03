@@ -36,7 +36,7 @@ define () =>
 						console.log '200 OK', file if debug > 3
 						fs.readFile file, (error, data) =>
 							if error
-								@e13.log '500: ', '"'+file+'"', error
+								console.log '500: ', '"'+file+'"', error if debug > 1
 								response.writeHead 500
 								response.end()
 							else

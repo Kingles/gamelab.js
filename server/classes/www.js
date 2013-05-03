@@ -45,7 +45,7 @@
               if (debug > 3) console.log('200 OK', file);
               return fs.readFile(file, function(error, data) {
                 if (error) {
-                  _this.e13.log('500: ', '"' + file + '"', error);
+                  if (debug > 1) console.log('500: ', '"' + file + '"', error);
                   response.writeHead(500);
                   return response.end();
                 } else {

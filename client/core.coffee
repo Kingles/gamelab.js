@@ -1,11 +1,9 @@
-define ["/shared/core.js"], (sharedGlabCore) ->
+define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 	class glabClient extends sharedGlabCore
 		constructor: (@settings) ->
 			super
 		init: () =>
-			###
 			modulesToLoad =
-				'threejs': '/libs/Three.js'
+				'socket': '/gamelabClient/classes/socket.js'
 			@.loadModules modulesToLoad, () =>
-				console.log @modules
-			###
+				@socket = new @modules['Socket'] @

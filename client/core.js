@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(["/shared/core.js"], function(sharedGlabCore) {
+  define(["/gamelabShared/core.js"], function(sharedGlabCore) {
     var glabClient;
     return glabClient = (function(_super) {
 
@@ -16,13 +16,14 @@
       }
 
       glabClient.prototype.init = function() {
-        /*
-        			modulesToLoad =
-        				'threejs': '/libs/Three.js'
-        			@.loadModules modulesToLoad, () =>
-        				console.log @modules
-        */
-
+        var modulesToLoad,
+          _this = this;
+        modulesToLoad = {
+          'socket': '/gamelabClient/classes/socket.js'
+        };
+        return this.loadModules(modulesToLoad, function() {
+          return _this.socket = new _this.modules['Socket'](_this);
+        });
       };
 
       return glabClient;
