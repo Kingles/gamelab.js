@@ -9,3 +9,7 @@ TODO:
 		- modes:
 			dev:	load newest projects in non-minified mode
 			prod:   load specific version in minified and bundled mode
+	Task utility
+		- create new project directory
+		- ???
+		- create new scene

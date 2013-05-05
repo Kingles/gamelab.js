@@ -52,7 +52,11 @@
         startDaemon();
       } else if (prev === null) {} else if (curr.nlink === 0) {} else {
         if (f.indexOf('node_modules') !== -1) {
-          console.log('node module changed, not restarting');
+          //console.log('node module changed, not restarting');
+        } else if (f.indexOf('gamelabClient') !== -1){
+          //console.log('in symlink');
+        } else if (f.indexOf('gamelabShared') !== -1){
+          //console.log('in symlink');
         } else {
           if (f.indexOf('.coffee') !== -1) {
             console.log('Changed:', f, 'compiling');
