@@ -27,6 +27,8 @@ define () ->
 			try
 				# If a module actually needs to be loaded
 				if fileList.length > 0
+					for module in fileList
+						require.undef module
 					require fileList, () =>
 						for klass in arguments
 							@modules[klass.name] = klass

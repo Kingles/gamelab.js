@@ -1,15 +1,17 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+
+
   define(function() {
     var sharedGlabCore;
     return sharedGlabCore = (function() {
-
       function sharedGlabCore() {
         this.findRoute = __bind(this.findRoute, this);
         this.addRoute = __bind(this.addRoute, this);
         this.loadModules = __bind(this.loadModules, this);
-        this.log = __bind(this.log, this);        this.modules = {};
+        this.log = __bind(this.log, this);
+        this.modules = {};
         this.moduleFilesLoaded = {};
         this.events = {};
       }
@@ -19,7 +21,7 @@
       };
 
       sharedGlabCore.prototype.loadModules = function(moduleList, callback) {
-        var fileList, moduleName, modulePath,
+        var error, fileList, module, moduleName, modulePath, _i, _len,
           _this = this;
         fileList = [];
         for (moduleName in moduleList) {
@@ -31,10 +33,14 @@
         }
         try {
           if (fileList.length > 0) {
+            for (_i = 0, _len = fileList.length; _i < _len; _i++) {
+              module = fileList[_i];
+              require.undef(module);
+            }
             return require(fileList, function() {
-              var klass, _i, _len;
-              for (_i = 0, _len = arguments.length; _i < _len; _i++) {
-                klass = arguments[_i];
+              var klass, _j, _len1;
+              for (_j = 0, _len1 = arguments.length; _j < _len1; _j++) {
+                klass = arguments[_j];
                 _this.modules[klass.name] = klass;
               }
               return callback();
@@ -42,7 +48,8 @@
           } else {
             return callback();
           }
-        } catch (error) {
+        } catch (_error) {
+          error = _error;
           this.log("loadModules error");
           throw error;
         }
@@ -72,7 +79,7 @@
       };
 
       sharedGlabCore.prototype.findRoute = function(route, metadata) {
-        var json, parts, style,
+        var error, json, parts, style,
           _this = this;
         if (this.events[route] != null) {
           this.runRoute(route, metadata);
@@ -81,7 +88,9 @@
           if (style === '/') {
             parts = route.split('/');
             parts.shift();
-            if (metadata == null) metadata = {};
+            if (metadata == null) {
+              metadata = {};
+            }
             metadata.route = parts;
             this.runRoute(parts.shift(), metadata);
           } else if (style === '{') {
@@ -92,7 +101,8 @@
               } else {
                 json = JSON.parse(route);
               }
-            } catch (error) {
+            } catch (_error) {
+              error = _error;
               this.log('JSON parse error');
               throw error;
             } finally {
@@ -107,7 +117,9 @@
         }
         return {
           runRoute: function(route, metadata) {
-            if (_this.events[route] == null) return false;
+            if (_this.events[route] == null) {
+              return false;
+            }
             return _this.events[route].callback(metadata);
           }
         };
