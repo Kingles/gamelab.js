@@ -8,6 +8,7 @@
     return Input = (function() {
       function Input(gameLab) {
         this.gameLab = gameLab;
+        this.unload = __bind(this.unload, this);
         this.bindMouseWheel = __bind(this.bindMouseWheel, this);
         this.bindMouse = __bind(this.bindMouse, this);
         this.mouse = {
@@ -19,6 +20,7 @@
           onGui: false
         };
         this.keyboard = KeyboardJS;
+        this.bindMouse();
       }
 
       Input.prototype.bindMouse = function() {
@@ -34,13 +36,9 @@
           }
           switch (e.which) {
             case 1:
-              _this.mouse.l = true;
-              break;
+              return _this.mouse.l = true;
             case 3:
-              _this.mouse.r = true;
-          }
-          if (!_this.e13.scene.paused) {
-            return _this.e13.click(e.which);
+              return _this.mouse.r = true;
           }
         });
         return $(window).mouseup(function(e) {
@@ -66,6 +64,10 @@
             }
           }
         });
+      };
+
+      Input.prototype.unload = function(callback) {
+        return callback();
       };
 
       return Input;

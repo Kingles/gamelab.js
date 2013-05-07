@@ -2,14 +2,15 @@
   var _this = this,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+
+
   define(function() {
     var www;
     return www = (function() {
-
-      function www(sharedGlabCore, settings, clientSettings) {
+      function www(glabServer, settings, clientSettings) {
         var debug, fs, http, path,
           _this = this;
-        this.sharedGlabCore = sharedGlabCore;
+        this.glabServer = glabServer;
         this.settings = settings;
         this.clientSettings = clientSettings;
         _this.process = __bind(_this.process, this);
@@ -19,33 +20,57 @@
         path = require('path');
         debug = this.settings.debug;
         this.server = http.createServer(function(request, response) {
-          var extension, file, mime, parts, urlArgs;
-          request.url = request.url.replace('..', '');
-          urlArgs = request.url.split('?');
-          if (urlArgs.length > 1) request.url = urlArgs[0];
+          var extension, file, ip, mime, parts, special, urlArgs;
+          special = false;
           if (request.url === '/') {
             file = _this.settings.docRoot + '/client/index.html';
-          } else if (request.url.substr(0, 8) === '/shared/') {
-            parts = request.url.split('/');
-            parts.shift();
-            parts.shift();
-            file = _this.settings.docRoot + '/shared/' + parts.join('/');
-          } else {
-            file = _this.settings.docRoot + '/client/' + request.url;
+            special = true;
+          } else if (request.url.substr(0, 12) === '/fileUpdate/') {
+            special = true;
+            ip = request.connection.remoteAddress;
+            file = request.url.substr(12);
+            if (ip === '127.0.0.1') {
+              _this.glabServer.sockServer.fileUpdate(file);
+              response.writeHead(200);
+              response.end('OK');
+            } else {
+              console.log('/fileUpdate/ refused from', ip);
+              response.writeHead(500);
+              response.end();
+            }
           }
-          extension = path.extname(file);
-          if (_this.settings.mimes[extension] != null) {
-            mime = _this.settings.mimes[extension];
-          } else {
-            file = '404.htm';
-            mime = _this.settings.mimes['.htm'];
+          if (!special) {
+            request.url = request.url.replace('..', '');
+            urlArgs = request.url.split('?');
+            if (urlArgs.length > 1) {
+              request.url = urlArgs[0];
+            }
+            if (request.url.substr(0, 8) === '/shared/') {
+              parts = request.url.split('/');
+              parts.shift();
+              parts.shift();
+              file = _this.settings.docRoot + '/shared/' + parts.join('/');
+            } else {
+              file = _this.settings.docRoot + '/client/' + request.url;
+            }
+            extension = path.extname(file);
+            if (_this.settings.mimes[extension] != null) {
+              mime = _this.settings.mimes[extension];
+            } else {
+              file = '404.htm';
+              mime = _this.settings.mimes['.htm'];
+            }
           }
           return fs.exists(file, function(ok) {
             if (ok) {
-              if (debug > 3) console.log('200 OK', file);
+              if (debug > 3) {
+                console.log('200 OK', file);
+              }
               return fs.readFile(file, function(error, data) {
                 if (error) {
-                  if (debug > 1) console.log('500: ', '"' + file + '"', error);
+                  if (debug > 1) {
+                    console.log('500: ', '"' + file + '"', error);
+                  }
                   response.writeHead(500);
                   return response.end();
                 } else {
@@ -56,7 +81,9 @@
                 }
               });
             } else {
-              if (debug > 1) console.log('404 Not Found', file);
+              if (debug > 1) {
+                console.log('404 Not Found', file);
+              }
               response.writeHead(404, {
                 'Content-Type': 'text/html'
               });

@@ -9,6 +9,7 @@ define () ->
 				scroll:	0
 				onGui: off	# Is cursor over gui object?
 			@keyboard = KeyboardJS	# http://robertwhurst.github.com/KeyboardJS/
+			@.bindMouse()
 		bindMouse: () =>
 			$(window).mousedown (e) =>
 				@mouse.x = e.clientX
@@ -24,7 +25,6 @@ define () ->
 						@mouse.l = on
 					when 3
 						@mouse.r = on
-				@e13.click e.which unless @e13.scene.paused
 			$(window).mouseup (e) =>
 				@mouse.l = off if e.which == 1
 				@mouse.r = off if e.which == 3
@@ -35,3 +35,5 @@ define () ->
 				else
 					@mouse.scroll += 1 unless @mouse.scroll >= 8
 				#@e13.scene.zoom() if @e13.scene.zoom?
+		unload: (callback) =>
+			callback()

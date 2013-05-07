@@ -7,6 +7,7 @@
     var sharedGlabCore;
     return sharedGlabCore = (function() {
       function sharedGlabCore() {
+        this.runRoute = __bind(this.runRoute, this);
         this.findRoute = __bind(this.findRoute, this);
         this.addRoute = __bind(this.addRoute, this);
         this.loadModules = __bind(this.loadModules, this);
@@ -26,10 +27,7 @@
         fileList = [];
         for (moduleName in moduleList) {
           modulePath = moduleList[moduleName];
-          if (this.moduleFilesLoaded[modulePath] == null) {
-            this.moduleFilesLoaded[modulePath] = true;
-            fileList.push(modulePath);
-          }
+          fileList.push(modulePath);
         }
         try {
           if (fileList.length > 0) {
@@ -79,10 +77,9 @@
       };
 
       sharedGlabCore.prototype.findRoute = function(route, metadata) {
-        var error, json, parts, style,
-          _this = this;
+        var error, json, parts, style;
         if (this.events[route] != null) {
-          this.runRoute(route, metadata);
+          return this.runRoute(route, metadata);
         } else {
           style = route.substr(0, 1);
           if (style === '/') {
@@ -92,14 +89,14 @@
               metadata = {};
             }
             metadata.route = parts;
-            this.runRoute(parts.shift(), metadata);
+            return this.runRoute(parts.shift(), metadata);
           } else if (style === '{') {
             try {
               json = route;
               if (typeof route === "Object") {
-                json = route;
+                return json = route;
               } else {
-                json = JSON.parse(route);
+                return json = JSON.parse(route);
               }
             } catch (_error) {
               error = _error;
@@ -112,17 +109,16 @@
               }
             }
           } else {
-            this.log('Unknown route style', style);
+            return this.log('Unknown route style', style);
           }
         }
-        return {
-          runRoute: function(route, metadata) {
-            if (_this.events[route] == null) {
-              return false;
-            }
-            return _this.events[route].callback(metadata);
-          }
-        };
+      };
+
+      sharedGlabCore.prototype.runRoute = function(route, metadata) {
+        if (this.events[route] == null) {
+          return false;
+        }
+        return this.events[route].callback(metadata);
       };
 
       return sharedGlabCore;

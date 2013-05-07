@@ -2,14 +2,17 @@
   var _this = this,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+
+
   define(function() {
     var sockServer;
     return sockServer = (function() {
-
       function sockServer(glabCore, settings) {
         this.glabCore = glabCore;
         this.settings = settings;
         _this.init = __bind(_this.init, this);
+        _this.broadcast = __bind(_this.broadcast, this);
+        _this.fileUpdate = __bind(_this.fileUpdate, this);
         _this.runRoute = __bind(_this.runRoute, this);
         _this.findRoute = __bind(_this.findRoute, this);
         _this.addRoute = __bind(_this.addRoute, this);
@@ -28,6 +31,25 @@
 
       sockServer.prototype.runRoute = function(route, metadata) {
         return this.glabCore.runRoute(route, metadata);
+      };
+
+      sockServer.prototype.fileUpdate = function(file) {
+        return this.broadcast('/update/' + file);
+      };
+
+      sockServer.prototype.broadcast = function(msg) {
+        var con, i, _ref, _results;
+        _ref = this.connections;
+        _results = [];
+        for (i in _ref) {
+          con = _ref[i];
+          if ((con != null) && (con.send != null)) {
+            _results.push(con.send(msg));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       };
 
       sockServer.prototype.init = function(callback) {

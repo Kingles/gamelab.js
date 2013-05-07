@@ -21,9 +21,9 @@ define () ->
 			fileList = []
 			for moduleName, modulePath of moduleList
 				# Don't load twice.
-				unless @moduleFilesLoaded[modulePath]?
-					@moduleFilesLoaded[modulePath] = true
-					fileList.push modulePath 
+				#unless @moduleFilesLoaded[modulePath]?
+				#	@moduleFilesLoaded[modulePath] = true
+				fileList.push modulePath 
 			try
 				# If a module actually needs to be loaded
 				if fileList.length > 0
@@ -85,6 +85,6 @@ define () ->
 							@.findRoute route, metadata
 				else
 					@.log 'Unknown route style', style
-			runRoute: (route, metadata) =>
-				return false unless @events[route]?
-				@events[route].callback(metadata)
+		runRoute: (route, metadata) =>
+			return false unless @events[route]?
+			@events[route].callback(metadata)

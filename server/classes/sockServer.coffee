@@ -12,6 +12,13 @@ define () =>
 			@glabCore.findRoute route, metadata
 		runRoute: (route, metadata) =>
 			@glabCore.runRoute route, metadata
+		# fileUpdate from ww
+		fileUpdate: (file) =>
+			#console.log 'socket file update', file
+			@.broadcast '/update/'+file
+		broadcast: (msg) =>
+			for i, con of @connections
+				con.send msg if con? and con.send?
 		# sockSever start -> open port + bind events
 		init: (callback) =>
 			@socket = @socketio.listen @settings.port, { 'log level': 1 }
