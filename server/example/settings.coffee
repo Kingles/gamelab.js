@@ -2,7 +2,7 @@ define () =>
 	return class settings
 		constructor: () ->
 			debug = 2
-			@root = '/home/eru/projects/chessinator/'
+			@root = '../'
 			@db =
 				'type': 'mongodb'
 			@www =

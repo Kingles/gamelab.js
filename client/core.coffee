@@ -28,19 +28,32 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 								console.log 'module', module, 'reloaded'
 								@[file] = new @modules[module] @
 						return false
-				if @settings.uri?
-					uri = 'http://'+@settings.uri+':'+@settings.www.port
+				else if @loadedScenes[file]?
+					if @currentScene instanceof @loadedScenes[file]
+						metadata = @currentScene.metadata if @currentScene.metadata?
+						console.log 'current scene has been updated'
+						@loadedScenes[file] = null
+						delete @loadedScenes[file]
+						@.changeScene file
+					else
+						console.log 'a loaded scene has been updated'
 				else
-					uri = 'http://'+window.location.hostname+':'+@settings.www.port
-				window.location = uri
+					window.location = @.getURI()
 		changeScene: (scene, metadata) => # Load and run named scene
 			@currentScene.unload()
 			if @loadedScenes[scene]?
 				@currentScene = new @loadedScenes[scene] @, metadata
 			else
+				require.undef 'scenes/'+scene
 				require [ 'scenes/'+scene ], (sceneClass) =>
 					@loadedScenes[scene] = sceneClass
 					@currentScene = new @loadedScenes[scene] @, metadata
+		getURI: () =>
+			if @settings.uri?
+				uri = 'http://'+@settings.uri+':'+@settings.www.port
+			else
+				uri = 'http://'+window.location.hostname+':'+@settings.www.port
+			return uri
 		init: (callback) => # EZ start (init common classes)
 			@.bindFileUpdates()
 			@moduleList =

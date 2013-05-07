@@ -14,6 +14,7 @@
         var _this = this;
         this.settings = settings;
         this.init = __bind(this.init, this);
+        this.getURI = __bind(this.getURI, this);
         this.changeScene = __bind(this.changeScene, this);
         this.bindFileUpdates = __bind(this.bindFileUpdates, this);
         this.sceneTemplate = {
@@ -30,7 +31,7 @@
       glabClient.prototype.bindFileUpdates = function() {
         var _this = this;
         return this.addRoute('/update/', function(metadata) {
-          var file, module, path, uri;
+          var file, module, path;
           path = metadata.route.pop();
           file = path.replace('.coffee', '');
           module = file.charAt(0).toUpperCase() + file.slice(1);
@@ -49,13 +50,21 @@
               });
               return false;
             }
-          }
-          if (_this.settings.uri != null) {
-            uri = 'http://' + _this.settings.uri + ':' + _this.settings.www.port;
+          } else if (_this.loadedScenes[file] != null) {
+            if (_this.currentScene instanceof _this.loadedScenes[file]) {
+              if (_this.currentScene.metadata != null) {
+                metadata = _this.currentScene.metadata;
+              }
+              console.log('current scene has been updated');
+              _this.loadedScenes[file] = null;
+              delete _this.loadedScenes[file];
+              return _this.changeScene(file);
+            } else {
+              return console.log('a loaded scene has been updated');
+            }
           } else {
-            uri = 'http://' + window.location.hostname + ':' + _this.settings.www.port;
+            return window.location = _this.getURI();
           }
-          return window.location = uri;
         });
       };
 
@@ -65,11 +74,22 @@
         if (this.loadedScenes[scene] != null) {
           return this.currentScene = new this.loadedScenes[scene](this, metadata);
         } else {
+          require.undef('scenes/' + scene);
           return require(['scenes/' + scene], function(sceneClass) {
             _this.loadedScenes[scene] = sceneClass;
             return _this.currentScene = new _this.loadedScenes[scene](_this, metadata);
           });
         }
+      };
+
+      glabClient.prototype.getURI = function() {
+        var uri;
+        if (this.settings.uri != null) {
+          uri = 'http://' + this.settings.uri + ':' + this.settings.www.port;
+        } else {
+          uri = 'http://' + window.location.hostname + ':' + this.settings.www.port;
+        }
+        return uri;
       };
 
       glabClient.prototype.init = function(callback) {

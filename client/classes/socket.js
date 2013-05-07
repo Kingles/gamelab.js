@@ -38,20 +38,15 @@
       }
 
       Socket.prototype.socketEnd = function() {
-        var restart, timer, uri,
+        var restart, timer,
           _this = this;
         if (this.gameLab.settings.debug > 1) {
           console.log('Server down');
         }
-        if (this.gameLab.settings.uri != null) {
-          uri = 'http://' + this.gameLab.settings.uri + ':' + this.gameLab.settings.www.port;
-        } else {
-          uri = 'http://' + window.location.hostname + ':' + this.gameLab.settings.www.port;
-        }
         timer = false;
         restart = function() {
           clearInterval(timer);
-          return window.location = uri;
+          return window.location = _this.gameLab.getURI();
         };
         return timer = setInterval(restart, 100);
       };
@@ -64,13 +59,7 @@
       };
 
       Socket.prototype.unload = function(callback) {
-        var uri;
-        if (this.gameLab.settings.uri != null) {
-          uri = 'http://' + this.gameLab.settings.uri + ':' + this.gameLab.settings.www.port;
-        } else {
-          uri = 'http://' + window.location.hostname + ':' + this.gameLab.settings.www.port;
-        }
-        return window.location = uri;
+        return window.location = this.gameLab.getURI();
       };
 
       return Socket;

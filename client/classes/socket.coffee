@@ -17,24 +17,16 @@ define () ->
 					@.socketEnd() if @refresh
 		socketEnd: () =>
 			console.log 'Server down' if @gameLab.settings.debug > 1
-			if @gameLab.settings.uri?
-				uri = 'http://'+@gameLab.settings.uri+':'+@gameLab.settings.www.port
-			else
-				uri = 'http://'+window.location.hostname+':'+@gameLab.settings.www.port
 			timer = false
 			restart = () =>
 				clearInterval(timer)
-				window.location = uri
+				window.location = @gameLab.getURI()
 			timer = setInterval(restart, 100)
 		send: (line) =>
 			console.log 'Sending ', line if @gameLab.settings.debug > 2
 			@socket.send line
 		unload: (callback) =>
-			if @gameLab.settings.uri?
-				uri = 'http://'+@gameLab.settings.uri+':'+@gameLab.settings.www.port
-			else
-				uri = 'http://'+window.location.hostname+':'+@gameLab.settings.www.port
-			window.location = uri
+			window.location = @gameLab.getURI()
 			#@refresh = false
 			#@socket.disconnect()
 			#callback()

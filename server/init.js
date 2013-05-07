@@ -81,7 +81,9 @@
         var reply = chunk.toString();
         if(reply != "OK"){
           console.log('httpUpdate: webserver said', reply);
-          callback() if callback?
+          if(callback !== null){
+            callback();
+          }
         }
       });
     }).on("error", function(err){

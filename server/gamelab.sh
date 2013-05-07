@@ -1,11 +1,12 @@
 #!/bin/bash
 
 PROJECT=$1
-GAMELABDIR=$2
-
+SCRIPTDIR=`realpath $0`
+GAMELABDIR="`dirname $SCRIPTDIR`/.."
 mkdir $PROJECT
+PROJECTDIR=`realpath $PROJECT`
 
-cd $PROJECT
+cd $PROJECTDIR
 mkdir shared client server
 cp $GAMELABDIR/.gitignore .
 echo $PROJECT > README
@@ -31,8 +32,3 @@ cp $GAMELABDIR/server/example/settings.coffee .
 cp $GAMELABDIR/server/example/serverCore.coffee core.coffee
 iced -c core.coffee
 cd ../../
-
-echo "ONE LAST BIT"
-echo "You'll need to edit $PROJECT/server/settings.coffee"
-echo "with the corret root path (or patch this installer to do this for you)"
-echo "And compile it with 'iced -c settings.coffee'"
