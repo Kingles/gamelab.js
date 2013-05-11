@@ -13,6 +13,9 @@
       function glabClient(settings) {
         var _this = this;
         this.settings = settings;
+        this.tick = __bind(this.tick, this);
+        this.render = __bind(this.render, this);
+        this.initRender = __bind(this.initRender, this);
         this.init = __bind(this.init, this);
         this.getURI = __bind(this.getURI, this);
         this.changeScene = __bind(this.changeScene, this);
@@ -25,6 +28,7 @@
         };
         this.currentScene = this.sceneTemplate;
         this.loadedScenes = {};
+        this.tickCalls = [];
         glabClient.__super__.constructor.apply(this, arguments);
       }
 
@@ -105,6 +109,46 @@
           _this.input = new _this.modules['Input'](_this);
           return callback();
         });
+      };
+
+      glabClient.prototype.initRender = function() {
+        var interval;
+        this.clock = new Date;
+        this.fpsFilter = 4;
+        this.frames = 0;
+        this.render();
+        if (this.settings.tickInterval != null) {
+          interval = this.settings.tickInterval;
+        } else {
+          interval = 30;
+        }
+        return setInterval(this.tick, 1000 / interval);
+      };
+
+      glabClient.prototype.render = function() {
+        var thisLoop, thisTime;
+        thisLoop = (thisTime = new Date) - this.clock;
+        this.frames += (thisLoop - this.frames) / this.fpsFilter;
+        this.clock = thisTime;
+        if (this.currentScene) {
+          if (this.currentScene.scene && this.currentScene.camera) {
+            if (!this.currentScene.paused) {
+              this.renderer.render(this.currentScene.scene, this.currentScene.camera);
+            }
+          }
+        }
+        return window.requestAnimationFrame(this.render);
+      };
+
+      glabClient.prototype.tick = function() {
+        var tock, _i, _len, _ref, _results;
+        _ref = this.tickCalls;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tock = _ref[_i];
+          _results.push(tock());
+        }
+        return _results;
       };
 
       return glabClient;

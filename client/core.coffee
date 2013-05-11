@@ -8,6 +8,7 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 					return false
 			@currentScene = @sceneTemplate
 			@loadedScenes = {}
+			@tickCalls = []
 			super # Run Gamelab share core constructor
 		bindFileUpdates: () =>
 			@.addRoute '/update/', (metadata) =>
@@ -65,3 +66,30 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 				@input = new @modules['Input'] @
 				#@canvas = new @modules['Canvas'] @
 				callback()
+		# Starts the renderer, a scene will call this. (Typically, the default scene would start the renderer when it is ready)
+		initRender: () =>
+			@clock = new Date
+			@fpsFilter = 4
+			@frames = 0
+			@.render()
+			if @settings.tickInterval?
+				interval = @settings.tickInterval
+			else
+				interval = 30
+			setInterval(@.tick, 1000/interval)
+		# Render loop - using requestAnimationFrame API.
+		render: () =>
+			# TODO: Update this to use a scene-defined renderer, scene and camera
+			thisLoop = (thisTime = new Date) - @clock
+			@frames+=(thisLoop - @frames) / @fpsFilter
+			@clock = thisTime
+			if @currentScene
+				if @currentScene.scene and @currentScene.camera
+					unless @currentScene.paused
+						@renderer.render @currentScene.scene, @currentScene.camera
+			window.requestAnimationFrame @.render
+		tick: () =>
+			#for tock in @ticks
+			tock() for tock in @tickCalls
+			#for tock in @tickCalls
+			#	#console.log tock
