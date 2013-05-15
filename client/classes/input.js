@@ -28,7 +28,6 @@
         $(window).mousedown(function(e) {
           _this.mouse.x = e.clientX;
           _this.mouse.y = e.clientY;
-          console.log(_this.mouse.x, _this.mouse.y);
           if (_this.mouse.onGui) {
             return false;
           } else {
@@ -36,9 +35,13 @@
           }
           switch (e.which) {
             case 1:
-              return _this.mouse.l = true;
+              _this.mouse.l = true;
+              break;
             case 3:
-              return _this.mouse.r = true;
+              _this.mouse.r = true;
+          }
+          if (_this.mouseDownEvent != null) {
+            return _this.mouseDownEvent();
           }
         });
         return $(window).mouseup(function(e) {
@@ -46,7 +49,10 @@
             _this.mouse.l = false;
           }
           if (e.which === 3) {
-            return _this.mouse.r = false;
+            _this.mouse.r = false;
+          }
+          if (_this.mouseUpEvent != null) {
+            return _this.mouseUpEvent();
           }
         });
       };

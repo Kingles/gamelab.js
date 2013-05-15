@@ -18,6 +18,9 @@
   var directoryToWatch = '../.'
   var red   = '\033[31m';
   var blue  = '\033[34m';
+  var green  = '\033[32m';
+  var cyan  = '\033[36m';
+
   var reset = '\033[0m';
   var output, startDaemon, stopDaemon, restart, coffee2js, p, httpUpdate, settings, uri;
   // Format STDOUT
@@ -46,27 +49,45 @@
   };
   restart = function() {
       date = new Date();
-      console.log(date.toString().substr(0, 24), '--> init.js called '+red+'restart()'+reset);
+      console.log(date.toString().substr(0, 24), cyan+'restart()'+reset+' called by init.js');
       stopDaemon();
       startDaemon();
   };
   // Takes a .coffee and a callback, compiles the .coffee to .js and returns cb(filename, jsCode)
   coffee2js = function(f, callback) {
+    date = new Date();
+    dateString = date.toString().substr(0, 24);
     fs.exists(f, function(ok){
       if(!ok){
-        console.log("COMPILE: file '"+f+"' not found!");
+        console.log(dateString, red+"COMPILE: file '"+f+"' not found!"+reset);
         process.exit();
       }else{
         date = new Date();
-        console.log(date.toString().substr(0, 24), red+'compiling'+reset, f)
+        console.log(dateString, green+'compiling'+reset, f)
         coffeeCode = fs.readFileSync(f, 'ascii');
-        js = compiler.compile(coffeeCode);
-        jsfile = f.replace('.coffee', '.js');
-        fs.unlink(jsfile, function() {
-          fs.writeFile(jsfile, js, function() {
-            callback(jsfile, js);
-          });
-        });
+        js = false;
+        try {
+          js = compiler.compile(coffeeCode);
+        } catch(error){
+          console.log(dateString, red+'COMPILE ERROR'+reset+' on line', '#'+error.location.first_line+':', blue+error.message+reset, 'excerpt:');
+          codeBreakout = coffeeCode.split("\n");
+          errorStart = error.location.first_line;
+          if(codeBreakout[errorStart-1] != null)
+            console.log('#'+(errorStart)+':', codeBreakout[errorStart-1])
+          if(codeBreakout[errorStart] != null)
+            console.log('#'+(errorStart+1)+':', codeBreakout[errorStart])
+          if(codeBreakout[errorStart+1] != null)
+            console.log('#'+(errorStart+2)+':', codeBreakout[errorStart+1])
+        } finally {
+          if (js){
+            jsfile = f.replace('.coffee', '.js');
+            fs.unlink(jsfile, function() {
+              fs.writeFile(jsfile, js, function() {
+                callback(jsfile, js);
+              });
+            });
+          }
+        }
       }
     });
   };
@@ -121,12 +142,12 @@
                     restart();
                   });
                 } catch (e) {
-                  console.log('Compile error:', e);
+                  console.log(red+'Compile error:'+reset, e);
                 }
               }
             } else if ((f.indexOf('.png') !== -1) || f.indexOf('.jpg') !== -1) {
               // image changed - tell the server about it!
-              console.log('an image changed, etc');
+              console.log('an image changed, etc - TODO: send server update');
             }
           }
         });

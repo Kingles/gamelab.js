@@ -14,7 +14,7 @@ define () ->
 			$(window).mousedown (e) =>
 				@mouse.x = e.clientX
 				@mouse.y = e.clientY
-				console.log @mouse.x, @mouse.y
+				#console.log @mouse.x, @mouse.y
 				if @mouse.onGui
 					return false
 				else
@@ -25,9 +25,11 @@ define () ->
 						@mouse.l = on
 					when 3
 						@mouse.r = on
+				@mouseDownEvent() if @mouseDownEvent?
 			$(window).mouseup (e) =>
 				@mouse.l = off if e.which == 1
 				@mouse.r = off if e.which == 3
+				@mouseUpEvent() if @mouseUpEvent?
 		bindMouseWheel: () =>
 			$(window).bind 'mousewheel', (e, delta, dX, dY) =>
 				if delta < 0
