@@ -20,7 +20,6 @@
   var blue  = '\033[34m';
   var green  = '\033[32m';
   var cyan  = '\033[36m';
-
   var reset = '\033[0m';
   var output, startDaemon, stopDaemon, restart, coffee2js, p, httpUpdate, settings, uri;
   // Format STDOUT
@@ -57,39 +56,41 @@
   coffee2js = function(f, callback) {
     date = new Date();
     dateString = date.toString().substr(0, 24);
-    fs.exists(f, function(ok){
-      if(!ok){
-        console.log(dateString, red+"COMPILE: file '"+f+"' not found!"+reset);
-        process.exit();
-      }else{
-        date = new Date();
-        console.log(dateString, green+'compiling'+reset, f)
-        coffeeCode = fs.readFileSync(f, 'ascii');
-        js = false;
-        try {
-          js = compiler.compile(coffeeCode);
-        } catch(error){
-          console.log(dateString, red+'COMPILE ERROR'+reset+' on line', '#'+error.location.first_line+':', blue+error.message+reset, 'excerpt:');
-          codeBreakout = coffeeCode.split("\n");
-          errorStart = error.location.first_line;
-          if(codeBreakout[errorStart-1] != null)
-            console.log('#'+(errorStart)+':', codeBreakout[errorStart-1])
-          if(codeBreakout[errorStart] != null)
-            console.log('#'+(errorStart+1)+':', codeBreakout[errorStart])
-          if(codeBreakout[errorStart+1] != null)
-            console.log('#'+(errorStart+2)+':', codeBreakout[errorStart+1])
-        } finally {
-          if (js){
-            jsfile = f.replace('.coffee', '.js');
-            fs.unlink(jsfile, function() {
-              fs.writeFile(jsfile, js, function() {
-                callback(jsfile, js);
-              });
-            });
-          }
-        }
+    //fs.exists(f, function(ok){
+    //if(!ok){
+    //  console.log(dateString, red+"COMPILE: file '"+f+"' not found!"+reset);
+    //  process.exit();
+    //}else{
+    date = new Date();
+    console.log(dateString, green+'compiling'+reset, f)
+    coffeeCode = fs.readFileSync(f, 'ascii');
+    js = false;
+    try {
+      js = compiler.compile(coffeeCode);
+    } catch(error){
+      console.log(dateString, red+'COMPILE ERROR'+reset+' on line', '#'+error.location.first_line+':', blue+error.message+reset, 'excerpt:');
+      codeBreakout = coffeeCode.split("\n");
+      errorStart = error.location.first_line;
+      if(codeBreakout[errorStart-1] != null)
+        console.log('#'+(errorStart)+':', codeBreakout[errorStart-1])
+      if(codeBreakout[errorStart] != null)
+        console.log('#'+(errorStart+1)+':', codeBreakout[errorStart])
+      if(codeBreakout[errorStart+1] != null)
+        console.log('#'+(errorStart+2)+':', codeBreakout[errorStart+1])
+      codeBreakout = coffeeCode = null
+    } finally {
+      if (js){
+        jsfile = f.replace('.coffee', '.js');
+        //fs.unlink(jsfile, function() {
+        fs.writeFile(jsfile, js, function() {
+          callback();
+          js = null;
+        });
+        //});
       }
-    });
+    }
+    //}
+    //});
   };
   httpUpdate = function(msg, callback){
     var options = {
@@ -132,7 +133,7 @@
               } else if (f.indexOf('/client/') !== -1){
                 coffee2js(f, function(){
                   //restart();
-                  httpUpdate(f)
+                  httpUpdate(f);
                 });
               } else {
                 // Fallback compile and restart
@@ -147,10 +148,11 @@
             } else if ((f.indexOf('.png') !== -1) || f.indexOf('.jpg') !== -1) {
               // image changed - tell the server about it!
               //console.log('an image changed, etc - TODO: send server update');
-              httpUpdate(f)
+              httpUpdate(f);
             } else {
               //console.log('unhandled file', "'"+f+"'", 'changed');
               // Do something with unhandled files
+
             }
           }
         });

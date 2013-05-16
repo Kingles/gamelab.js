@@ -6,14 +6,19 @@ define ["gamelabClient/core.js"], (clientGlabCore) ->
 			# Call super(callback) to init base classes. callback() is a function that
 			# in run when all modules are loaded.
 			super () =>
+				
 				# How to load modules using @.loadModules():
 				#	modulesToLoad =
 				#		'canvas': '/gamelabClient/classes/canvas.js'
 				#	@.loadModules modulesToLoad, () =>
 				#		#canvas = new @modules['Canvas'] @
-				# A common canvas setup + binding place.
-				# as with (hopefully) most of gamelab.js,
-				# each tool is stand-alone and optional
-				# @canvas = new @modules['Canvas'] @
-				# For this game, we'll handle our canvas directly in the scene.
+				# Canvas, as well as a few others (Input and Socket) are provided. (Reloading them is a waste!)
+				# Rendering and gamecode "ticking" pause
+				@paused = no
+				# Functions attached to the "ticking"
+				@tickCalls = []
+				# Build our canvas
+				@canvas = new @modules['Canvas'] @
+				@canvas.boilerplate().initRender()
+				# We now have @camera, @scene and @renderer
 				@.changeScene 'example', { some: 'options here' }
