@@ -4,22 +4,24 @@ GameLab	- by Seandon Mooy
 
 To great a new project
 
-    ./gamelab.js/server/gamelab.sh myAwesomeProject
+`./gamelab.js/server/gamelab.sh myAwesomeProject`
 
 Starting the server!
 
-    cd myAwesomeProject/server/
+`cd myAwesomeProject/server/`
+`./init.js`
 
-    ./init.js
+That will fail because you're missing something, so try
 
-Take a look in client/core.coffee in your new project
-as well as the scene it changes to, client/scenes/example.coffee.
+`./gamelab.js/server/install.sh`
 
-Remember, init.js will stay open, running the web server, socket server, and compiling your coffeescript.
-Keep an eye on it for coffeescript compile errors, or server runtime errors!
+;P
 
-Gamelab is not meant to be monolithic - in fact it's a small set of scripts hobbled together to
-create a boilerplate for creating all sorts of javascript applications.
+Take a look in client/core.coffee in your new project as well as the scene it changes to, client/scenes/example.coffee.
+
+Remember, init.js will stay open, running the web server, socket server, and compiling your coffeescript. Keep an eye on it for coffeescript compile errors, or server runtime errors!
+
+Gamelab is not meant to be monolithic - in fact it's a small set of scripts hobbled together to create a boilerplate for creating all sorts of javascript applications.
 
 Please feel free to hack at gamelab.js/client/core, shared/core, etc!
 
