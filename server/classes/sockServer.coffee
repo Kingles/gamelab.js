@@ -19,6 +19,9 @@ define () =>
 		broadcast: (msg) =>
 			for i, con of @connections
 				con.send msg if con? and con.send?
+		send: (connId, msg) =>
+			return false if !@connections[connId]?
+			@connections[connId].send msg
 		# sockSever start -> open port + bind events
 		init: (callback) =>
 			@socket = @socketio.listen @settings.port, { 'log level': 1 }

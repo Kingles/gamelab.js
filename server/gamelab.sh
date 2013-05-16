@@ -3,16 +3,17 @@
 PROJECT=$1
 SCRIPTDIR=`realpath $0`
 GAMELABDIR="`dirname $SCRIPTDIR`/.."
-mkdir $PROJECT
+mkdir -p $PROJECT
 PROJECTDIR=`realpath $PROJECT`
 
+# For the love of god someone please rewrite this
 cd $PROJECTDIR
 mkdir shared client server
 cp $GAMELABDIR/.gitignore .
 echo $PROJECT > README
 ln -s $GAMELABDIR gamelab.js
 cd client
-mkdir scenes
+mkdir scenes classes
 ln -s $GAMELABDIR/client gamelabClient
 ln -s $GAMELABDIR/shared gamelabShared
 cp $GAMELABDIR/server/example/clientCore.coffee core.coffee

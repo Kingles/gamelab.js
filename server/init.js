@@ -122,7 +122,6 @@
           if (typeof f === 'object' && prev === null && curr === null) { // initial scan, run once
             startDaemon();
           } else if (prev === null) {} else if (curr.nlink === 0) {} else {
-            // coffee compiling
             if (f.indexOf('.coffee') !== -1) {
               if (f.indexOf('node_modules') !== -1) { // skip node_modules
                 //console.log('node module changed, not restarting');
@@ -147,7 +146,11 @@
               }
             } else if ((f.indexOf('.png') !== -1) || f.indexOf('.jpg') !== -1) {
               // image changed - tell the server about it!
-              console.log('an image changed, etc - TODO: send server update');
+              //console.log('an image changed, etc - TODO: send server update');
+              httpUpdate(f)
+            } else {
+              //console.log('unhandled file', "'"+f+"'", 'changed');
+              // Do something with unhandled files
             }
           }
         });

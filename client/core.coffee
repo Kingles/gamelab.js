@@ -11,11 +11,9 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 			@tickCalls = []
 			super # Run Gamelab share core constructor
 		bindFileUpdates: () =>
-			@.addRoute '/update/', (metadata) =>
-				#metadata.route.shift()
-				#metadata.route.shift()
-				#metadata.route.shift()
-				path = metadata.route.pop()
+			@.addRoute '/update/', (metadata, data) =>
+				#console.log metadata, data
+				path = data.pop()
 				file = path.replace('.coffee', '')
 				module = file.charAt(0).toUpperCase() + file.slice(1);
 				if @modules[module]? and @moduleList[module]? and @[file]?
@@ -31,24 +29,26 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 						return false
 				else if @loadedScenes[file]?
 					if @currentScene instanceof @loadedScenes[file]
-						metadata = @currentScene.metadata if @currentScene.metadata?
-						console.log 'current scene has been updated'
+						#metadata = @currentScene.metadata if @currentScene.metadata?
+						#console.log 'current scene has been updated'
 						@loadedScenes[file] = null
 						delete @loadedScenes[file]
 						@.changeScene file
 					else
-						console.log 'a loaded scene has been updated'
+						#console.log 'a loaded scene has been updated'
+						@loadedScenes[file] = null
+						delete @loadedScenes[file]
 				else
 					window.location = @.getURI()
 		changeScene: (scene, metadata) => # Load and run named scene
-			@currentScene.unload()
-			if @loadedScenes[scene]?
+			@currentScene.unload() if @currentScene.unload?
+			#if @loadedScenes[scene]?
+			#	@currentScene = new @loadedScenes[scene] @, metadata
+			#else
+			require.undef 'scenes/'+scene
+			require [ 'scenes/'+scene ], (sceneClass) =>
+				@loadedScenes[scene] = sceneClass
 				@currentScene = new @loadedScenes[scene] @, metadata
-			else
-				require.undef 'scenes/'+scene
-				require [ 'scenes/'+scene ], (sceneClass) =>
-					@loadedScenes[scene] = sceneClass
-					@currentScene = new @loadedScenes[scene] @, metadata
 		getURI: () =>
 			if @settings.uri?
 				uri = 'http://'+@settings.uri+':'+@settings.www.port
@@ -79,6 +79,7 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 			setInterval(@.tick, 1000/interval)
 		# Render loop - using requestAnimationFrame API.
 		render: () =>
+			console.log 'DEPRECATED - PLEASE USE CLASSES/CANVAS'
 			# TODO: Update this to use a scene-defined renderer, scene and camera
 			thisLoop = (thisTime = new Date) - @clock
 			@frames+=(thisLoop - @frames) / @fpsFilter

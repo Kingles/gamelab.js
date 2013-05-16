@@ -11,6 +11,7 @@
         this.glabCore = glabCore;
         this.settings = settings;
         _this.init = __bind(_this.init, this);
+        _this.send = __bind(_this.send, this);
         _this.broadcast = __bind(_this.broadcast, this);
         _this.fileUpdate = __bind(_this.fileUpdate, this);
         _this.runRoute = __bind(_this.runRoute, this);
@@ -50,6 +51,13 @@
           }
         }
         return _results;
+      };
+
+      sockServer.prototype.send = function(connId, msg) {
+        if (this.connections[connId] == null) {
+          return false;
+        }
+        return this.connections[connId].send(msg);
       };
 
       sockServer.prototype.init = function(callback) {

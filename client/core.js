@@ -34,9 +34,9 @@
 
       glabClient.prototype.bindFileUpdates = function() {
         var _this = this;
-        return this.addRoute('/update/', function(metadata) {
+        return this.addRoute('/update/', function(metadata, data) {
           var file, module, path;
-          path = metadata.route.pop();
+          path = data.pop();
           file = path.replace('.coffee', '');
           module = file.charAt(0).toUpperCase() + file.slice(1);
           if ((_this.modules[module] != null) && (_this.moduleList[module] != null) && (_this[file] != null)) {
@@ -56,15 +56,12 @@
             }
           } else if (_this.loadedScenes[file] != null) {
             if (_this.currentScene instanceof _this.loadedScenes[file]) {
-              if (_this.currentScene.metadata != null) {
-                metadata = _this.currentScene.metadata;
-              }
-              console.log('current scene has been updated');
               _this.loadedScenes[file] = null;
               delete _this.loadedScenes[file];
               return _this.changeScene(file);
             } else {
-              return console.log('a loaded scene has been updated');
+              _this.loadedScenes[file] = null;
+              return delete _this.loadedScenes[file];
             }
           } else {
             return window.location = _this.getURI();
@@ -74,16 +71,14 @@
 
       glabClient.prototype.changeScene = function(scene, metadata) {
         var _this = this;
-        this.currentScene.unload();
-        if (this.loadedScenes[scene] != null) {
-          return this.currentScene = new this.loadedScenes[scene](this, metadata);
-        } else {
-          require.undef('scenes/' + scene);
-          return require(['scenes/' + scene], function(sceneClass) {
-            _this.loadedScenes[scene] = sceneClass;
-            return _this.currentScene = new _this.loadedScenes[scene](_this, metadata);
-          });
+        if (this.currentScene.unload != null) {
+          this.currentScene.unload();
         }
+        require.undef('scenes/' + scene);
+        return require(['scenes/' + scene], function(sceneClass) {
+          _this.loadedScenes[scene] = sceneClass;
+          return _this.currentScene = new _this.loadedScenes[scene](_this, metadata);
+        });
       };
 
       glabClient.prototype.getURI = function() {
@@ -127,6 +122,7 @@
 
       glabClient.prototype.render = function() {
         var thisLoop, thisTime;
+        console.log('DEPRECATED - PLEASE USE CLASSES/CANVAS');
         thisLoop = (thisTime = new Date) - this.clock;
         this.frames += (thisLoop - this.frames) / this.fpsFilter;
         this.clock = thisTime;

@@ -7,9 +7,11 @@
     var sharedGlabCore;
     return sharedGlabCore = (function() {
       function sharedGlabCore() {
+        this.delRoute = __bind(this.delRoute, this);
         this.runRoute = __bind(this.runRoute, this);
         this.findRoute = __bind(this.findRoute, this);
         this.addRoute = __bind(this.addRoute, this);
+        this.loadModule = __bind(this.loadModule, this);
         this.loadModules = __bind(this.loadModules, this);
         this.log = __bind(this.log, this);
         this.modules = {};
@@ -53,6 +55,18 @@
         }
       };
 
+      sharedGlabCore.prototype.loadModule = function(moduleName, modulePath, callback) {
+        var _this = this;
+        if (this.modules[moduleName] != null) {
+          return false;
+        }
+        require.undef(modulePath);
+        return require([modulePath], function(thisModule) {
+          _this.modules[moduleName] = thisModule;
+          return callback();
+        });
+      };
+
       sharedGlabCore.prototype.addRoute = function(route, callback) {
         var eventName, parts;
         if (route.substr(0, 1) === '/') {
@@ -77,7 +91,10 @@
       };
 
       sharedGlabCore.prototype.findRoute = function(route, metadata) {
-        var error, json, parts, style;
+        var parts, routeName, style;
+        if (metadata == null) {
+          metadata = false;
+        }
         if (this.events[route] != null) {
           return this.runRoute(route, metadata);
         } else {
@@ -85,40 +102,27 @@
           if (style === '/') {
             parts = route.split('/');
             parts.shift();
-            if (metadata == null) {
-              metadata = {};
-            }
-            metadata.route = parts;
-            return this.runRoute(parts.shift(), metadata);
-          } else if (style === '{') {
-            try {
-              json = route;
-              if (typeof route === "Object") {
-                return json = route;
-              } else {
-                return json = JSON.parse(route);
-              }
-            } catch (_error) {
-              error = _error;
-              this.log('JSON parse error');
-              throw error;
-            } finally {
-              for (route in json) {
-                metadata = json[route];
-                this.findRoute(route, metadata);
-              }
-            }
+            routeName = parts.shift();
+            return this.runRoute(routeName, metadata, parts);
           } else {
             return this.log('Unknown route style', style);
           }
         }
       };
 
-      sharedGlabCore.prototype.runRoute = function(route, metadata) {
+      sharedGlabCore.prototype.runRoute = function(route, metadata, data) {
         if (this.events[route] == null) {
           return false;
         }
-        return this.events[route].callback(metadata);
+        return this.events[route].callback(metadata, data);
+      };
+
+      sharedGlabCore.prototype.delRoute = function(route) {
+        if (this.events[route] == null) {
+          return true;
+        }
+        this.events[route] = null;
+        return delete this.events[route];
       };
 
       return sharedGlabCore;

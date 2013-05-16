@@ -11,17 +11,17 @@ define () ->
 			@socket = io.connect(uri)
 			@socket.on 'connect', () =>
 				@socket.on 'message', (message) =>
-					console.log message
+					console.log 'Getting ', message if @gameLab.settings.debug > 2
 					@gameLab.findRoute message
 				@socket.on 'disconnect', () =>
 					@.socketEnd() if @refresh
 		socketEnd: () =>
-			console.log 'Server down' if @gameLab.settings.debug > 1
+			console.log 'Server down' if @gameLab.settings.debug > 2
 			timer = false
 			restart = () =>
 				clearInterval(timer)
 				window.location = @gameLab.getURI()
-			timer = setInterval(restart, 100)
+			timer = setInterval(restart, 500)
 		send: (line) =>
 			console.log 'Sending ', line if @gameLab.settings.debug > 2
 			@socket.send line

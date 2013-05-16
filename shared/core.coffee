@@ -40,6 +40,12 @@ define () ->
 			catch error
 				@.log "loadModules error"
 				throw error
+		loadModule: (moduleName, modulePath, callback) =>
+			return false if @modules[moduleName]?
+			require.undef modulePath
+			require [ modulePath ], (thisModule) =>
+				@modules[moduleName] = thisModule
+				callback()
 		# Adds an event to @events
 		addRoute: (route, callback) =>
 			# Complex route
@@ -56,35 +62,26 @@ define () ->
 				@events[route] = { callback: callback }
 		# Finds existing events based on provided route and runs them
 		findRoute: (route, metadata) =>
-			# Simple route
+			metadata = false unless metadata?
 			if @events[route]?
 				@.runRoute route, metadata
 			else
 				style = route.substr(0, 1)
-				# Complex route
 				if style == '/'
 					parts = route.split '/'
 					parts.shift()
-					metadata = {} if !metadata?
-					metadata.route = parts
-					@.runRoute parts.shift(), metadata
-				# JSON, blob of routes
-				# Recursivly run routes till the bottom of the stack
-				else if style == '{'
-					try
-						json = route
-						if typeof route == "Object"
-							json = route
-						else
-							json = JSON.parse route
-					catch error
-						@.log 'JSON parse error'
-						throw error
-					finally
-						for route, metadata of json
-							@.findRoute route, metadata
+					routeName = parts.shift()
+					@.runRoute routeName, metadata, parts
 				else
 					@.log 'Unknown route style', style
-		runRoute: (route, metadata) =>
+		runRoute: (route, metadata, data) =>
 			return false unless @events[route]?
-			@events[route].callback(metadata)
+			#data = false if !data?
+			#if data? and @events[route].map?
+			#	# map options to option name
+			#else
+			@events[route].callback(metadata, data)
+		delRoute: (route) =>
+			return true unless @events[route]?
+			@events[route] = null
+			delete @events[route]
