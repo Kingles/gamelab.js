@@ -1,6 +1,9 @@
-GameLab	- by Seandon Mooy
-	A game engine, based on NodeJS and ThreeJS, written in Coffee-Script
-	The spirital successor to the "E" engines.
+Gamelab.js
+========
+
+A game engine, based on NodeJS and ThreeJS, written in Coffee-Script.
+The spirital successor to the "E" engines.
+By Seandon Mooy
 
 To great a new project
 
