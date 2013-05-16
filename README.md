@@ -1,9 +1,7 @@
 Gamelab.js
 ========
 
-A game engine, based on NodeJS and ThreeJS, written in Coffee-Script.
-The spirital successor to the "E" engines.
-By Seandon Mooy
+A game engine based on node.js and three.js by Seandon Mooy
 
 To great a new project
 
@@ -12,6 +10,7 @@ To great a new project
 Starting the server!
 
 `cd myAwesomeProject/server/`
+
 `./init.js`
 
 That will fail because you're missing something, so try
