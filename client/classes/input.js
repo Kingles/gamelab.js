@@ -60,7 +60,7 @@
       Input.prototype.bindMouseWheel = function() {
         var _this = this;
         return $(window).bind('mousewheel', function(e, delta, dX, dY) {
-          if (delta < 0) {
+          if (delta > 0) {
             if (!(_this.mouse.scroll < 1)) {
               _this.mouse.scroll -= 1;
             }

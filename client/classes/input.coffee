@@ -32,7 +32,7 @@ define () ->
 				@mouseUpEvent() if @mouseUpEvent?
 		bindMouseWheel: () =>
 			$(window).bind 'mousewheel', (e, delta, dX, dY) =>
-				if delta < 0
+				if delta > 0
 					@mouse.scroll -= 1 unless @mouse.scroll < 1
 				else
 					@mouse.scroll += 1 unless @mouse.scroll >= 8

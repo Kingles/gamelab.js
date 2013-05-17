@@ -19,11 +19,12 @@ Starting the server!
 
 `http://127.0.0.1:8080`
 
-To get started quick, open client/scenes/example.coffee in your favorite editor and make a quick change to the code (try during wireframe texture on/off) and save the file. You'll see init.js:
+To get started quick, open client/scenes/example.coffee in your favorite editor and make a quick change to the code (try turning the material's wireframe flag on/off) and save the file. You'll see init.js:
 
 - compile the coffeescript into javascript
 - determines what needs to be reloaded
 - refreshes the browser, server, or both, or none!
+- show you the results of your code change in mere seconds!
 
 The structure of gamelab.js and of your new project dir:
 
@@ -39,7 +40,7 @@ the server (both web and socket) code, which loads it own modules. Runs on node.
 
 the browser code! Runs in all modern browsers (hopefully!), and is offered up by server/classes/www on whatever port is configured (I use 8080 for web and 8082 for socket, see server/settings).
 
-In your project directory, you'll see you have a mirrored layout to gamelab.js. project/server/core as should be I hope be obvious, simply extends gamelab.js/server/core therefore it contains all code in gamelab.js/shared/core as well.
+In your project directory, you'll see you have a mirrored layout to gamelab.js. project/server/core simply extends gamelab.js/server/core therefore it contains all code in gamelab.js/shared/core as well.
 
 Shared modules and classes should be clear from how core works, but it's something I haven't buffed out as much as I'd like to. Ideally your server can access the same code your client can, and assuming things are split correctly, very complex issues like interpolation become trivial - a server/classes/dog runs as fast as a client/classes/dog because they're both extensions of shared/classes/dog.
 
