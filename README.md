@@ -19,7 +19,13 @@ Starting the server!
 
 `http://127.0.0.1:8080`
 
-Now use your favorite editor (SublimeText2 supports IcedCoffee!) to edit anything in your gamelab.js checkout or (preferably) in your new project directory. When you write to a .coffee file, init.js will pick it up and compile it into javascript, refresh the server and the client (in the case of client code, sometimes without even refreshing the browser!), and generally take care of all boilerplate tasks. It's fairly simple and I recommend just reading the whole project from the start:
+To get started quick, open client/scenes/example.coffee in your favorite editor and make a quick change to the code (try during wireframe texture on/off) and save the file. You'll see init.js:
+
+- compile the coffeescript into javascript
+- determines what needs to be reloaded
+- refreshes the browser, server, or both, or none!
+
+The structure of gamelab.js and of your new project dir:
 
 ## gamelab.js/shared/core.coffee
 
