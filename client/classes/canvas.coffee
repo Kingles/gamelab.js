@@ -14,7 +14,6 @@ define () ->
 
 			# Renderer
 			@scene.renderer = new THREE.WebGLRenderer { antialias: true }
-			@scene.renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
 			@scene.renderer.domElement.style.position = "relative"
 			@scene.renderer.autoClear = false
 			$('body').append @scene.renderer.domElement
@@ -25,6 +24,8 @@ define () ->
 				SCREEN_WIDTH = window.innerWidth
 				SCREEN_HEIGHT = window.innerHeight
 				@scene.renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
+				@scene.camera.aspect = (SCREEN_WIDTH / SCREEN_HEIGHT)
+				@scene.camera.updateProjectionMatrix();
 
 			return @
 		# Starts the renderer, a scene will call this. (Typically, the default scene would start the renderer when it is ready)

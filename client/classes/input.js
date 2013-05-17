@@ -62,12 +62,15 @@
         return $(window).bind('mousewheel', function(e, delta, dX, dY) {
           if (delta < 0) {
             if (!(_this.mouse.scroll < 1)) {
-              return _this.mouse.scroll -= 1;
+              _this.mouse.scroll -= 1;
             }
           } else {
             if (!(_this.mouse.scroll >= 8)) {
-              return _this.mouse.scroll += 1;
+              _this.mouse.scroll += 1;
             }
+          }
+          if (_this.mouseScrollEvent != null) {
+            return _this.mouseScrollEvent();
           }
         });
       };

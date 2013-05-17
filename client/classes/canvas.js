@@ -28,7 +28,6 @@
         this.scene.renderer = new THREE.WebGLRenderer({
           antialias: true
         });
-        this.scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.scene.renderer.domElement.style.position = "relative";
         this.scene.renderer.autoClear = false;
         $('body').append(this.scene.renderer.domElement);
@@ -36,7 +35,9 @@
         $(window).resize(function() {
           SCREEN_WIDTH = window.innerWidth;
           SCREEN_HEIGHT = window.innerHeight;
-          return _this.scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+          _this.scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+          _this.scene.camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+          return _this.scene.camera.updateProjectionMatrix();
         });
         return this;
       };
