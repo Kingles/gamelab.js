@@ -17,19 +17,21 @@ Starting the server!
 
 `./init.js`
 
+`http://127.0.0.1:8080`
+
 Now use your favorite editor (SublimeText2 supports IcedCoffee!) to edit anything in your gamelab.js checkout or (preferably) in your new project directory. When you write to a .coffee file, init.js will pick it up and compile it into javascript, refresh the server and the client (in the case of client code, sometimes without even refreshing the browser!), and generally take care of all boilerplate tasks. It's fairly simple and I recommend just reading the whole project from the start:
 
-- gamelab.js/shared/core.coffee
+## gamelab.js/shared/core.coffee
 
 all core files extend from this. contains the loadModules and route functions.
 
-- gamelab.js/server/core.coffee
+## gamelab.js/server/core.coffee
 
-the server (both web and socket) code, which loads it own modules. Runs on node.js via init.sh (init.sh compiles code and notifies the server of changes, after that it just wraps server/core)
+the server (both web and socket) code, which loads it own modules. Runs on node.js via init.sh (init.sh compiles code and notifies the server of changes, after that it just wraps server/core). You see that server/core loads **server/settings.coffee**, some of which are delivered to the client (see server/www)
 
-- gamelab.js/client/core.coffee
+## gamelab.js/client/core.coffee
 
-the browser code! Runs in all modern browsers (hopefully!), and is offered up by server/classes/www
+the browser code! Runs in all modern browsers (hopefully!), and is offered up by server/classes/www on whatever port is configured (I use 8080 for web and 8082 for socket, see server/settings).
 
 In your project directory, you'll see you have a mirrored layout to gamelab.js. project/server/core as should be I hope be obvious, simply extends gamelab.js/server/core therefore it contains all code in gamelab.js/shared/core as well.
 
