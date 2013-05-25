@@ -21,7 +21,11 @@
           _this = this;
         SCREEN_WIDTH = window.innerWidth;
         SCREEN_HEIGHT = window.innerHeight;
-        this.scene.scene = new THREE.Scene();
+        if (typeof Physijs !== "undefined" && Physijs !== null) {
+          this.scene.scene = new Physijs.Scene;
+        } else {
+          this.scene.scene = new THREE.Scene();
+        }
         this.scene.camera = new THREE.PerspectiveCamera(45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
         this.scene.camera.position.z = 300;
         this.scene.scene.add(this.scene.camera);
@@ -61,6 +65,9 @@
         this.clock = thisTime;
         if (this.scene.scene && this.scene.camera) {
           if (!this.scene.paused) {
+            if (this.scene.scene.simulate != null) {
+              this.scene.scene.simulate(void 0, 1);
+            }
             this.scene.renderer.render(this.scene.scene, this.scene.camera);
           }
         }

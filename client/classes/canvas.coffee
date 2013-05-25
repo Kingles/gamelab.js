@@ -7,7 +7,10 @@ define () ->
 			SCREEN_WIDTH = window.innerWidth
 			SCREEN_HEIGHT = window.innerHeight
 			# Scene + camera
-			@scene.scene = new THREE.Scene()
+			if Physijs?
+				@scene.scene = new Physijs.Scene
+			else
+				@scene.scene = new THREE.Scene()
 			@scene.camera = new THREE.PerspectiveCamera( 45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 )
 			@scene.camera.position.z = 300
 			@scene.scene.add @scene.camera
@@ -45,6 +48,7 @@ define () ->
 			@clock = thisTime
 			if @scene.scene and @scene.camera
 				unless @scene.paused
+					@scene.scene.simulate( undefined, 1 ) if @scene.scene.simulate?
 					@scene.renderer.render @scene.scene, @scene.camera
 			window.requestAnimationFrame @.render
 		unload: () =>

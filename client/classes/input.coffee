@@ -19,7 +19,6 @@ define () ->
 					return false
 				else
 					e.preventDefault()
-				
 				switch e.which
 					when 1
 						@mouse.l = on
@@ -33,9 +32,9 @@ define () ->
 		bindMouseWheel: () =>
 			$(window).bind 'mousewheel', (e, delta, dX, dY) =>
 				if delta > 0
-					@mouse.scroll -= 1 unless @mouse.scroll < 1
+					@mouse.scroll -= 1 # unless @mouse.scroll < 1
 				else
-					@mouse.scroll += 1 unless @mouse.scroll >= 8
+					@mouse.scroll += 1 # unless @mouse.scroll >= 8
 				@mouseScrollEvent() if @mouseScrollEvent?
 				#@e13.scene.zoom() if @e13.scene.zoom?
 		unload: (callback) =>
