@@ -53,7 +53,7 @@
       startDaemon();
   };
   // Takes a .coffee and a callback, compiles the .coffee to .js and returns cb(filename, jsCode)
-  coffee2js = function(f, callback) {
+  coffee2js = function(f, callback, silence) {
     date = new Date();
     dateString = date.toString().substr(0, 24);
     //fs.exists(f, function(ok){
@@ -61,22 +61,28 @@
     //  console.log(dateString, red+"COMPILE: file '"+f+"' not found!"+reset);
     //  process.exit();
     //}else{
-    date = new Date();
-    console.log(dateString, green+'compiling'+reset, f)
+    //date = new Date();
+    if(typeof(silence) == "undefined"){
+      console.log(dateString, green+'compiling'+reset, f);
+    }
     coffeeCode = fs.readFileSync(f, 'ascii');
     js = false;
     try {
       js = compiler.compile(coffeeCode);
     } catch(error){
-      console.log(dateString, red+'COMPILE ERROR'+reset+' on line', '#'+error.location.first_line+':', blue+error.message+reset, 'excerpt:');
+      console.log(dateString, red+'COMPILE ERROR'+reset+' on line', '#'+(error.location.first_line+1)+':', blue+error.message+reset, 'excerpt:');
       codeBreakout = coffeeCode.split("\n");
       errorStart = error.location.first_line;
+      if(codeBreakout[errorStart-2] != null)
+        console.log('#'+(errorStart-1)+':', codeBreakout[errorStart-2])
       if(codeBreakout[errorStart-1] != null)
         console.log('#'+(errorStart)+':', codeBreakout[errorStart-1])
       if(codeBreakout[errorStart] != null)
-        console.log('#'+(errorStart+1)+':', codeBreakout[errorStart])
+        console.log(blue+'#'+(errorStart+1)+':'+reset, codeBreakout[errorStart])
       if(codeBreakout[errorStart+1] != null)
         console.log('#'+(errorStart+2)+':', codeBreakout[errorStart+1])
+      if(codeBreakout[errorStart+2] != null)
+        console.log('#'+(errorStart+3)+':', codeBreakout[errorStart+2])
       codeBreakout = coffeeCode = null
     } finally {
       if (js){
@@ -118,6 +124,8 @@
       if (environmentMode == 'prod') {
         startDaemon(); // in 'prod' mode, don't watch the directory.
       } else {
+        date = new Date();
+        console.log(date.toString().substr(0, 24), cyan+'SYSTEM READY'+reset)
         watch.watchTree(directoryToWatch, function(f, curr, prev) { // Watch for changes in this dir
           var js, jsfile;
           if (typeof f === 'object' && prev === null && curr === null) { // initial scan, run once
@@ -158,5 +166,5 @@
         });
       }
     });
-  });
+  }, true);
 }).call(this);

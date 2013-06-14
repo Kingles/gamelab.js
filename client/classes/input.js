@@ -41,7 +41,7 @@
               _this.mouse.r = true;
           }
           if (_this.mouseDownEvent != null) {
-            return _this.mouseDownEvent();
+            return _this.mouseDownEvent(e);
           }
         });
         return $(window).mouseup(function(e) {
@@ -52,7 +52,7 @@
             _this.mouse.r = false;
           }
           if (_this.mouseUpEvent != null) {
-            return _this.mouseUpEvent();
+            return _this.mouseUpEvent(e);
           }
         });
       };

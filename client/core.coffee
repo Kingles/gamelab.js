@@ -63,7 +63,7 @@ define ["/gamelabShared/core.js"], (sharedGlabCore) ->
 				'Canvas': '/gamelabClient/classes/canvas.js'
 			@.loadModules @moduleList, () =>
 				@socket = new @modules['Socket'] @
-				@input = new @modules['Input'] @
+				#@input = new @modules['Input'] @
 				#@canvas = new @modules['Canvas'] @
 				callback()
 		# Starts the renderer, a scene will call this. (Typically, the default scene would start the renderer when it is ready)

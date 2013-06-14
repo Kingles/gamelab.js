@@ -10,6 +10,7 @@ define () ->
 				onGui: off	# Is cursor over gui object?
 			@keyboard = KeyboardJS	# http://robertwhurst.github.com/KeyboardJS/
 			@.bindMouse()
+			#console.log @keyboard
 		bindMouse: () =>
 			$(window).mousedown (e) =>
 				@mouse.x = e.clientX
@@ -24,11 +25,11 @@ define () ->
 						@mouse.l = on
 					when 3
 						@mouse.r = on
-				@mouseDownEvent() if @mouseDownEvent?
+				@mouseDownEvent(e) if @mouseDownEvent?
 			$(window).mouseup (e) =>
 				@mouse.l = off if e.which == 1
 				@mouse.r = off if e.which == 3
-				@mouseUpEvent() if @mouseUpEvent?
+				@mouseUpEvent(e) if @mouseUpEvent?
 		bindMouseWheel: () =>
 			$(window).bind 'mousewheel', (e, delta, dX, dY) =>
 				if delta > 0

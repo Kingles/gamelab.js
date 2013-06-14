@@ -4,14 +4,14 @@ define () ->
 		constructor: (@scene, @settings) ->
 			# Canvas constructor.
 		boilerplate: () =>
-			SCREEN_WIDTH = window.innerWidth
-			SCREEN_HEIGHT = window.innerHeight
+			@screen_width = window.innerWidth
+			@screen_height = window.innerHeight
 			# Scene + camera
 			if Physijs?
 				@scene.scene = new Physijs.Scene
 			else
 				@scene.scene = new THREE.Scene()
-			@scene.camera = new THREE.PerspectiveCamera( 45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 )
+			@scene.camera = new THREE.PerspectiveCamera( 45, @screen_width / @screen_height, 1, 10000 )
 			@scene.camera.position.z = 300
 			@scene.scene.add @scene.camera
 
@@ -20,14 +20,14 @@ define () ->
 			@scene.renderer.domElement.style.position = "relative"
 			@scene.renderer.autoClear = false
 			$('body').append @scene.renderer.domElement
-			@scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT)
+			@scene.renderer.setSize(@screen_width, @screen_height)
 
 			# Renderer resize
 			$(window).resize () =>
-				SCREEN_WIDTH = window.innerWidth
-				SCREEN_HEIGHT = window.innerHeight
-				@scene.renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
-				@scene.camera.aspect = (SCREEN_WIDTH / SCREEN_HEIGHT)
+				@screen_width = window.innerWidth
+				@screen_height = window.innerHeight
+				@scene.renderer.setSize @screen_width, @screen_height
+				@scene.camera.aspect = (@screen_width / @screen_height)
 				@scene.camera.updateProjectionMatrix();
 
 			return @

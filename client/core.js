@@ -101,7 +101,6 @@
         };
         return this.loadModules(this.moduleList, function() {
           _this.socket = new _this.modules['Socket'](_this);
-          _this.input = new _this.modules['Input'](_this);
           return callback();
         });
       };

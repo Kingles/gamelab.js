@@ -17,16 +17,15 @@
       }
 
       Canvas.prototype.boilerplate = function() {
-        var SCREEN_HEIGHT, SCREEN_WIDTH,
-          _this = this;
-        SCREEN_WIDTH = window.innerWidth;
-        SCREEN_HEIGHT = window.innerHeight;
+        var _this = this;
+        this.screen_width = window.innerWidth;
+        this.screen_height = window.innerHeight;
         if (typeof Physijs !== "undefined" && Physijs !== null) {
           this.scene.scene = new Physijs.Scene;
         } else {
           this.scene.scene = new THREE.Scene();
         }
-        this.scene.camera = new THREE.PerspectiveCamera(45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
+        this.scene.camera = new THREE.PerspectiveCamera(45, this.screen_width / this.screen_height, 1, 10000);
         this.scene.camera.position.z = 300;
         this.scene.scene.add(this.scene.camera);
         this.scene.renderer = new THREE.WebGLRenderer({
@@ -35,12 +34,12 @@
         this.scene.renderer.domElement.style.position = "relative";
         this.scene.renderer.autoClear = false;
         $('body').append(this.scene.renderer.domElement);
-        this.scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.scene.renderer.setSize(this.screen_width, this.screen_height);
         $(window).resize(function() {
-          SCREEN_WIDTH = window.innerWidth;
-          SCREEN_HEIGHT = window.innerHeight;
-          _this.scene.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-          _this.scene.camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+          _this.screen_width = window.innerWidth;
+          _this.screen_height = window.innerHeight;
+          _this.scene.renderer.setSize(_this.screen_width, _this.screen_height);
+          _this.scene.camera.aspect = _this.screen_width / _this.screen_height;
           return _this.scene.camera.updateProjectionMatrix();
         });
         return this;
