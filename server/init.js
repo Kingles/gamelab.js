@@ -56,14 +56,8 @@
   coffee2js = function(f, callback, silence) {
     date = new Date();
     dateString = date.toString().substr(0, 24);
-    //fs.exists(f, function(ok){
-    //if(!ok){
-    //  console.log(dateString, red+"COMPILE: file '"+f+"' not found!"+reset);
-    //  process.exit();
-    //}else{
-    //date = new Date();
-    if(typeof(silence) == "undefined"){
-      console.log(dateString, green+'compiling'+reset, f);
+    if(typeof(silence) == "undefined"){ 
+      process.stdout.write(dateString+' '+green+'compiling'+reset+' '+f);
     }
     coffeeCode = fs.readFileSync(f, 'ascii');
     js = false;
@@ -89,6 +83,10 @@
         jsfile = f.replace('.coffee', '.js');
         //fs.unlink(jsfile, function() {
         fs.writeFile(jsfile, js, function() {
+          if(typeof(silence) == "undefined"){ 
+            finish = new Date();
+            console.log(green+' done'+reset, 'took', (finish-date)/1000, 'seconds');
+          }
           callback();
           js = null;
         });
