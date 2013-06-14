@@ -4,24 +4,8 @@
 // in 'dev' mode, watches a directory and compiles coffeescript, then restarting the server core process
 // in 'prod' mode, starts server core and TODO alarms an email / system if process dies.
 (function() {
-  var environmentMode = 'dev';
-  var fs = require('fs');
-  var system = require('sys');
-  var child_process = require('child_process');
-  var spawn = child_process.spawn;
-  var compiler = require('iced-coffee-script');
-  var watch = require('watch');
-  var rjs = require('requirejs');
-  var http = require('http');
-  var coreFile = 'core.js';
-  var settingsFile = 'settings.js'
-  var directoryToWatch = '../.'
-  var red   = '\033[31m';
-  var blue  = '\033[34m';
-  var green  = '\033[32m';
-  var cyan  = '\033[36m';
-  var reset = '\033[0m';
-  var output, startDaemon, stopDaemon, restart, coffee2js, p, httpUpdate, settings, uri;
+  var environmentMode = 'dev', fs = require('fs'), system = require('sys'), child_process = require('child_process'), spawn = child_process.spawn, compiler = require('iced-coffee-script'), watch = require('watch'), rjs = require('requirejs'), http = require('http'), coreFile = 'core.js', settingsFile = 'settings.js', directoryToWatch = '../.', red = '\033[31m', blue = '\033[34m', green = '\033[32m', cyan = '\033[36m', reset = '\033[0m',
+  output, startDaemon, stopDaemon, restart, coffee2js, p, httpUpdate, settings, uri;
   // Format STDOUT
   output = function(msg) {
       if (msg.length > 0) {
@@ -123,7 +107,7 @@
         startDaemon(); // in 'prod' mode, don't watch the directory.
       } else {
         date = new Date();
-        console.log(date.toString().substr(0, 24), cyan+'SYSTEM READY'+reset)
+        console.log(date.toString().substr(0, 24), cyan+'Gamelab.js is READY'+reset, '> port', settings.www.port)
         watch.watchTree(directoryToWatch, function(f, curr, prev) { // Watch for changes in this dir
           var js, jsfile;
           if (typeof f === 'object' && prev === null && curr === null) { // initial scan, run once
