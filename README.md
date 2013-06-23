@@ -8,7 +8,7 @@ Key contributors list:
 
 Install node modules (as always, read the code itsself if you're curious!)
 
-`./gamelab.js/server/install.sh`
+`./gamelab.js/server/install.js`
 
 To create a new project
 
