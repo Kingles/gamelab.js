@@ -3,6 +3,9 @@ Gamelab.js
 
 A game engine based on node.js and three.js by Seandon Mooy
 
+Key contributors list:
+	Jeromy M.
+
 Install node modules (as always, read the code itsself if you're curious!)
 
 `./gamelab.js/server/install.sh`
